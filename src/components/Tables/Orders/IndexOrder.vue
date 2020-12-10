@@ -44,6 +44,8 @@ name: "IndexOrder",
     deleteItem:function (val){
       axios.delete(url + val.id,config).
       then(response=>{
+        this.isSucceful = response.data.succes;
+        this.message = response.data.message
         this.getItems();
       }).catch((error)=>{
         if(error.response.status==500){

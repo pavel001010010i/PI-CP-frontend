@@ -77,12 +77,16 @@ name: "CustomerIndex",
     deletePlane:function (val){
       axios.delete(url + val.id,config).
       then(response=>{
+        this.isSucceful = response.data.succes;
+        this.message = response.data.message;
         this.getPlanes();
       });
     },
     editPlaneBut: function (val) {
       axios.get(url + val.id,config).
       then(response=>{
+        this.isSucceful = response.data.succes;
+        this.message = response.data.message;
         this.getPlane = response.data;
         this.isDisableEmailField = val.isDisableEmailField
       });

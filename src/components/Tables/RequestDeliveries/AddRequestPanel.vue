@@ -76,7 +76,8 @@ name: "AddRequestPanel",
       providers:[],
       isSucceful:true,
       token:'',
-      dist:0
+      dist:0,
+      message:''
     }
   },
   components:{

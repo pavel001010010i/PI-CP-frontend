@@ -17,6 +17,10 @@
 <script>
 const url = "https://localhost:44332/api/Customers/";
 const urlUser = "https://localhost:44332/api/Users/";
+const config = {
+  headers: { Authorization: 'Bearer '+ localStorage.getItem('user_token'),
+    Accept: "application/json"}
+};
 
 import InputFieldCust from "@/components/Tables/Customer/InputFieldCust";
 import CustomerList from "@/components/Tables/Customer/CustomerList";
@@ -45,8 +49,7 @@ name: "CustomerIndex",
 
   methods:{
     saveUpdateCustomer: function(val){
-      axios.put(url + val.id, val,{
-        headers: {'Content-Type': 'application/json'}})
+      axios.put(url + val.id, val,config)
           .then(response => {
             this.isSucceful = response.data.exist;
             this.message = response.data.message
@@ -60,10 +63,7 @@ name: "CustomerIndex",
 
     },
     addCustomer:  function (val) {
-      var headers= {
-        "Content-Type": "application/json"
-      };
-      axios.post(url, val,headers)
+      axios.post(url, val,config)
           .then(response => {this.getCustomers();})
           .catch((error) => {
             console.log(error);
@@ -71,11 +71,6 @@ name: "CustomerIndex",
     },
 
     deleteCustomer:function (val){
-      var vm = this;
-      var headers= {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem('user_token')
-      }
       axios.delete(url + val.id).
       then(response=>{
         this.getCustomers();
@@ -86,13 +81,7 @@ name: "CustomerIndex",
 
     },
     editCustBut: function (val) {
-      var vm = this;
-      var headers= {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + localStorage.getItem('user_token')
-      }
-      //vm.visibleButEdit = !vm.visibleButEdit;
-      axios.get(url + val.id).
+      axios.get(url + val.id,config).
       then(response=>{
         this.getCustomer = response.data;
         this.isDisableEmailField = val.isDisableEmailField
@@ -100,17 +89,8 @@ name: "CustomerIndex",
 
     },
     getCustomers: function () {
-      const config = {
-        headers: { Authorization: 'Bearer '+ localStorage.getItem('user_token'),
-          Accept: "application/json"}
-      };
       axios.get(url,config)
           .then(response => (this.customers = response.data));
-    }
-  },
-  watch:{
-    providers: function (){
-      //this.getProviders();
     }
   }
 }
