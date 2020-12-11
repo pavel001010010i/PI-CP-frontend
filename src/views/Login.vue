@@ -1,5 +1,5 @@
 <template>
-  <form class="list-group-item col-md-5 m-d" style="margin: auto">
+  <div class="list-group-item col-md-5 m-d" style="margin: auto" v-show="kke==''">
     <p class="text-sm-center display-4 mb-0">Log in</p>
     <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>
     <div class="input-group mb-2 mr-sm-2">
@@ -13,18 +13,16 @@
       <label for="exampleInputPassword1">Password</label>
       <input v-model="passwordField" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
     </div>
-  </form>
-  <hr>
-  <button type="submit" class="btn btn-primary" v-on:click="LoginSubmit">Log in</button>
-  <p v-show="isLockout" class="text-danger">{{message}}</p>
-  <tr/>
-  <p class="text-info mt-md-3">Technical support: techsupport@gmail.com</p>
 
+    <p v-show="isLockout" class="text-danger">{{message}}</p>
+    <p class="text-info mt-md-3">Technical support: techsupport@gmail.com</p>
+  </div>
+  <button v-show="kke==''" type="submit" class="btn btn-primary mt-3" v-on:click="LoginSubmit">Log in</button>
+  <h1 v-show="kke!=''" class="text-info mt-5">Hello, {{responseToken.username}} </h1>
 </template>
 
 <script>
 const urlUser = "https://localhost:44332/token";
-const urlChekExistTableUser= "https://localhost:44332/isuserexist";
 
 export default {
 name: "Login",
@@ -35,8 +33,12 @@ name: "Login",
     responseToken:{},
     message:'',
     isLockout: false,
-    isToken:'true'
+    isToken:'true',
+    kke:'',
   }
+  },
+  updated() {
+  this.kke = localStorage.getItem('user_token');
   },
   methods:{
     LoginSubmit: function (){
