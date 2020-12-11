@@ -178,8 +178,6 @@ name: "AddRequestPanel",
             this.isSucceful=false;
           }
           else {
-            this.message = "E baby";
-            this.isSucceful=true;
           }});
     },
     getCargoes: function () {

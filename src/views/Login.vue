@@ -18,7 +18,7 @@
     <p class="text-info mt-md-3">Technical support: techsupport@gmail.com</p>
   </div>
   <button v-show="kke==''" type="submit" class="btn btn-primary mt-3" v-on:click="LoginSubmit">Log in</button>
-  <h1 v-show="kke!=''" class="text-info mt-5">Hello, {{responseToken.username}} </h1>
+  <h1 v-show="kke!=''" class="text-info mt-5 alert alert-info">Hello, {{responseToken.username}} </h1>
 </template>
 
 <script>
