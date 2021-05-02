@@ -1,22 +1,24 @@
 <template>
   <div id="app" class="container">
+    <vue-notification-list position="bottom-right"></vue-notification-list>
     <LogInOutShapka  :is_logout_but="!chekAutorizUser" @exit_logout="exit_logout"/>
-    <Shapka v-show="chekAutorizUser&&isAdminCheck" />
-    <NavigationForCustomer v-show="chekAutorizUser&&isCustomerCheck" />
+    <Shapka v-show="isAdminCheck" />
+    <NavigationForCustomer v-show="isUserCheck" />
     <NavigationForProvider v-show="chekAutorizUser&&isProviderCheck" />
-    <router-view v-show="chekAutorizUser"
-                 @exit_logout="exit_logout_route"
-                 @enable_logout_but="enable_logout_but"
-                 @provider_exist_check="provider_exist_check"
+    <router-view v-show="isVisible"
                  />
   </div>
 </template>
 <script>
+import store from './store.index'
+import MaintVariables from '@/Services/MainVariables'
 import NavigationForProvider from "@/components/NavigatonBars/NavigationForProvider";
 import NavigationForCustomer from "@/components/NavigatonBars/NavigationForCustomer";
 import LogInOutShapka from "@/views/LogInOutShapka";
 import Shapka from "@/views/Shapka";
+import HereService from "@/Services/HereAPi/HereService";
 export default {
+  store:store,
   data(){
     return{
       chekAutorizUser: false,
@@ -26,15 +28,29 @@ export default {
       isCustomerCheck: false,
       isProviderCheck: false,
       isAdminCheck: false,
-      isAccess: true,
+      isUserChek: false
     }
   },
   components:{
+    HereService,
     Shapka,
     LogInOutShapka,
     NavigationForCustomer,
-    NavigationForProvider
+    NavigationForProvider,
+    MaintVariables
   },
+  computed:{
+    isVisible(){
+      return !store.getters.isVisible;
+    },
+    isAdminCheck(){
+      return !store.getters.isVisible && store.getters.getIsAdmin
+    },
+    isUserCheck(){
+      return store.getters.getIsUser && !store.getters.isVisible
+    }
+  },
+
   methods:{
 
     exit_logout: function (val){
@@ -104,10 +120,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
 }
 
 #nav a {

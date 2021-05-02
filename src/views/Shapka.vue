@@ -16,10 +16,7 @@
           <router-link class="nav-link text-dark" to="/users" >Users</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link text-dark" to="/planes" >Planes</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link text-dark" to="/cargoes" >Cargoes</router-link>
+          <router-link class="nav-link text-dark" to="/cargoes" >Грузы</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link text-dark" to="/countries" >Countries</router-link>
@@ -29,6 +26,9 @@
         </li>
         <li class="nav-item">
           <router-link class="nav-link text-dark" to="/orders" >Orders</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link class="nav-link text-dark" to="/hereservice" >HereApi</router-link>
         </li>
       </ul>
     </div>

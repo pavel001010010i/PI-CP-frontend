@@ -21,14 +21,14 @@
     </div>
     <div class="col-md-4 mb-3">
       <label>Departure Date</label>
-      <input type="date"  class="form-control" v-model="dateDep">
+      <input type="date" min="2020-12-12"  class="form-control" v-model="dateDep">
       <div class="valid-tooltip">
         Looks good!
       </div>
     </div>
     <div class="col-md-4 mb-3">
       <label>Delivery Date</label>
-      <input type="date" class="form-control" required v-model="dateDel">
+      <input type="date" min="2020-12-12" class="form-control" required v-model="dateDel">
       <div class="valid-tooltip">
         Looks good!
       </div>

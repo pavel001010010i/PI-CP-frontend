@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="display: flex;justify-content: space-between;align-items: center;">
-      <h1 class="text-center">Мои грузы</h1>
-      <button class="btn btn-outline-info" @click="ShowCargoPopup">Добавить груз</button>
+      <h1 class="text-center">Мой транспорт</h1>
+      <button class="btn btn-outline-info" @click="ShowCargoPopup">Добавить транспорт</button>
     </div>
     <v-popup v-if="isPopupeVisible"
              @ClosePopup="ClosePopup"
@@ -16,85 +16,79 @@
       <div class="form-row">
         <div class="col-md-2 mb-3">
           <label for="validationTooltip01">Название</label>
-          <input type="text" class="form-control" id="validationTooltip01" placeholder="Name Cargo" required v-model="cargoModel.name">
+          <input type="text" class="form-control" id="validationTooltip01" placeholder="Имя" required v-model="transportModel.name">
+          <div class="valid-tooltip">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-2 mb-3">
+          <label for="validationTooltip02">Модель</label>
+          <input type="text" class="form-control" id="validationTooltip02" placeholder="Модель" required v-model="transportModel.model">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-2 mb-3">
           <label for="validationTooltip01">Высота</label>
-          <input type="number" class="form-control"  placeholder="Height" required v-model="cargoModel.height">
+          <input type="number" class="form-control"  placeholder="Высота" required v-model="transportModel.height">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-2 mb-3">
           <label for="validationTooltip01">Ширина</label>
-          <input type="number" class="form-control"  placeholder="Width" required v-model="cargoModel.width">
+          <input type="number" class="form-control"  placeholder="Ширина" required v-model="transportModel.width">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-2 mb-3">
           <label>Глубина</label>
-          <input type="number" class="form-control"  placeholder="Depth" required v-model="cargoModel.depth">
+          <input type="number" class="form-control"  placeholder="Грубина" required v-model="transportModel.depth">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-2 mb-3">
-          <label>Вес</label>
-          <input type="number" class="form-control"  placeholder="Weight" required v-model="cargoModel.weight">
+          <label>Расход топлива, л/100км</label>
+          <input type="number" class="form-control"  placeholder="Расход топлива" required v-model="transportModel.fuelConsumption">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-1 mb-3">
           <label for="validationTooltip03">Активный</label>
-          <input type="checkbox" class="form-control" id="validationTooltip03" placeholder="is active" required v-model="cargoModel.isStatus">
+          <input type="checkbox" class="form-control" id="validationTooltip03" placeholder="Активный" required v-model="transportModel.isStatus">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-12 mb-3">
-          <label>Тип груза</label>
-            <Multiselect
-              v-model="idTypeCargoes"
-              mode="tags"
-              :options="options"
-              label="name"
-              trackBy="name"
-              :searchable="true"
-            />
-        </div>
-        <div class="col-md-1">
-          <label>Стоимость</label>
-          <input type="number" class="form-control"  placeholder="Стоимость доставки" required v-model="cargoModel.costDelivery">
-          <div class="valid-tooltip">
-            Looks good!
-          </div>
-        </div>
-        <div class="col-md-2 mb-3">
-          <label>Тип оплаты</label>
+        <div class="col-md-3 mb-3">
+          <label>Нагрузка на ось</label>
           <Multiselect
-              v-model="cargoModel.idTypePayment"
-              placeholder="Оплата"
-              :options="TypePaymentOptions"
+              v-model="transportModel.idTransLoadCapacity"
+              :options="TransportLoadCapacityOptions"
               label="name"
               trackBy="name"
               :searchable="true"
           />
         </div>
         <div class="col-md-1 mb-3">
-          <label>Валюта</label>
-          <Multiselect
-              v-model="cargoModel.idTypeCurrency"
-              placeholder="валюта"
-              :options="TypeCurrencyOptions"
+          <label>Кол. осей</label>
+          <input type="number" class="form-control"  placeholder="Кол. осей" required v-model="transportModel.numberAxes">
+          <div class="valid-tooltip">
+            Looks good!
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label>Тип Кузова</label>
+            <Multiselect
+              v-model="transportModel.idTypeTransport"
+              :options="TypeTransportOptions"
               label="name"
               trackBy="name"
               :searchable="true"
-          />
+            />
         </div>
         <div class="col-2 mb-3">
           <label>С</label>
@@ -113,50 +107,50 @@
         <div class="col-sm-6">
           <HereAddressLookup
               @data="GetFromAddress"
-              :address="routeModel.fullAddressFrom"/>
+              :address="routeModel.fullAddressFrom"
+              name-Search-Label ="Страна/регион/область/адресс отправления"
+          />
         </div>
         <div class="col-sm-6">
           <HereAddressLookup
               @data="GetToAddress"
-              :address="routeModel.fullAddressTo"/>
+              :address="routeModel.fullAddressTo"
+              name-Search-Label ="Страна/регион/область/адресс конечной точки"
+          />
         </div>
       </div>
     </v-popup>
 
-    <CargoList :cargoes ="cargoes" @edit-cargo="GetEditCargoItem" />
+    <List :items ="transports"  @edit-item="GetEditItem" />
     <p class="text-info text-success" v-show="isSucceful">{{message}}</p>
     <p class="text-info text-danger" v-show="!isSucceful">{{ message }}</p>
   </div>
 </template>
 
 <script>
-const url = "https://localhost:44332/api/Cargoes/";
-const config = {
-  headers: { Authorization: 'Bearer '+ localStorage.getItem('user_token'),
-    Accept: "application/json"}
-};
-
-import CargoList from "@/components/Tables/Cargo/CargoList";
+import List from "@/components/Tables/Transport/List";
 import vPopup from "@/Services/Popup/modal-popup"
 import Multiselect from '@vueform/multiselect'
 import TypeService from "@/Services/TypeServices/TypeService"
-import CargoService from "@/Services/CargoServices/CargoService"
+import TransportService from "@/Services/TransportServices/TransportService"
 import MainVariables from "@/Services/MainVariables";
-import CargoModel from "@/Models/CargoModel"
+import TransportModel from "@/Models/TransportModel"
 import Constants from "@/Services/Constants"
 import Datepicker from 'vue3-datepicker'
 import HereAddressLookup from "@/Services/HereAPi/HereAddressLookup";
 import RouteModel from "@/Models/RouteModel"
 
+import TypeTransportModel from "@/Models/TypeTransportModel"
+
 export default {
-name: "CustomerIndex",
+name: "TransportIndex",
   data() {
     return {
 
       isPopupeVisible:false,
       getCargo: {},
       isDisableEmailField:false,
-      cargoes: [],
+      transports: [],
       isVisible: false,
       token:'',
 
@@ -164,11 +158,12 @@ name: "CustomerIndex",
       role:'',
       options: [],
       isState:true,
-      cargoModel:CargoModel.data().cargoModel,
+      transportModel:TransportModel.data().transportModel,
+      typeTransportModel: TypeTransportModel.data().typeTransportModel,
       routeModel:RouteModel.data().routeModel,
+      TransportLoadCapacityOptions:[],
+      TypeTransportOptions:[],
 
-      TypePaymentOptions:[],
-      TypeCurrencyOptions:[],
 
       idTypeCargoes: [],
       AllTypeCargo:[],
@@ -179,11 +174,11 @@ name: "CustomerIndex",
   },
   components:{
     vPopup,
-    CargoList,
+    List,
     Multiselect,
-    TypeCargoService: TypeService,
-    CargoService,
-    CargoModel,
+    TypeService,
+    TransportService,
+    TransportModel,
     Constants,
     Datepicker,
     HereAddressLookup
@@ -197,76 +192,63 @@ name: "CustomerIndex",
     }
   },
   mounted() {
-    this.GetCargoes();
-    this.GetTypeCargo();
-    this.GetTypePayments();
-    this.GetTypeCurrencies();
+    this.GetTransports();
+    this.GetTypeTransports();
+    this.GetTransportLoadCapacities();
     this.token = localStorage.getItem('user_token');
     this.role =localStorage.getItem('user_role');
   },
   computed:{
-    cargoes(){
-      console.log("from compudet");
-      return this.$store.getters.GetCargoes;
+    transports(){
+      console.log("from compudet transport");
+      return this.$store.getters.GetTransports;
     },
-    TypeCurrencyOptions(){
-      return this.$store.getters.GetTypeCurrencies
+    TransportLoadCapacityOptions(){
+      return this.$store.getters.GetTransportLoadCapacities
     },
-    TypePaymentOptions(){
-      return this.$store.getters.GetTypePayments
+    TypeTransportOptions(){
+      return this.$store.getters.GetTypeTransports
     }
-
   },
   methods:{
-    GetTypePayments(){
-      this.TypePaymentOptions=[];
-      TypeService.methods.GetTypePayments();
+    GetTypeTransports(){
+      this.TypeTransportOptions=[];
+      TypeService.methods.GetTypeTransports();
     },
-    GetTypeCurrencies(){
-      this.TypeCurrencyOptions=[];
-      TypeService.methods.GetTypeCurrencies();
+    GetTransportLoadCapacities(){
+      this.TransportLoadCapacityOptions=[];
+      TypeService.methods.GetTransportLoadCapacities();
     },
     UpdatePopup(){
-      this.selectTypeCargo=[]
-      this.idTypeCargoes.forEach(item=>{
-        this.AllTypeCargo.forEach(x=>{
-          if(item===x.id){
-            this.selectTypeCargo.push(x);
-          }
-        });
-      })
-
-      this.cargoModel.idUser=MainVariables.data().userId;
-      this.cargoModel.typeCargo=this.selectTypeCargo;
-      this.routeModel.cargo = this.cargoModel;
+      this.transportModel.idUser=MainVariables.data().userId;
+      this.routeModel.transport = this.transportModel;
       this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
       this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" })
 
-      CargoService.methods.UpdateCargo(this.routeModel);
-      this.GetCargoes();
+      TransportService.methods.Update(this.routeModel);
+      this.GetTransports();
       this.ClosePopup();
     },
-    GetEditCargoItem(data){
+    GetEditItem(data){
 
       this.isState = false;
       this.isPopupeVisible=true;
       this.idTypeCargoes=[];
 
-      this.cargoModel ={
-        id:data.cargo.id,
-        name:data.cargo.name,
-        height:data.cargo.height,
-        width:data.cargo.width,
-        depth:data.cargo.depth,
-        weight:data.cargo.weight,
-        costDelivery: data.cargo.costDelivery,
-        idTypeCurrency: data.cargo.idTypeCurrency,
-        idTypePayment: data.cargo.idTypePayment,
-        isStatus:data.cargo.isStatus
+      this.transportModel ={
+        id:data.item.id,
+        name:data.item.name,
+        model: data.item.model,
+        height:data.item.height,
+        width:data.item.width,
+        depth:data.item.depth,
+        numberAxes: data.item.numberAxes,
+        idTransLoadCapacity:data.item.idTransLoadCapacity,
+        idTypeTransport:data.item.idTypeTransport,
+        axlePressure:data.item.axlePressure,
+        fuelConsumption: data.item.fuelConsumption,
+        isStatus:data.item.isStatus
       }
-      data.cargo.typeCargo.forEach(item=>{
-        this.idTypeCargoes.push(item.id);
-      });
 
       this.selectedDateStart = new Date(data.startDate)
       this.selectedDateEnd = new Date(data.endDate)
@@ -278,59 +260,30 @@ name: "CustomerIndex",
       this.routeModel.fullAddressFrom = data.fullAddressFrom
       this.routeModel.fullAddressTo = data.fullAddressTo
     },
-    GetCargoes(){
-      CargoService.methods.GetCargoes();
-    },
-    GetTypeCargo(){
-      this.AllTypeCargo=[];
-      this.options =[];
-      TypeService.methods.GetTypeCargo()
-          .then(response => {
-            response.data.forEach(item=>{
-              this.AllTypeCargo.push(item);
-              this.options.push(
-                  {
-                    value:item.id,
-                    name:item.name
-                  });
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+    GetTransports(){
+      TransportService.methods.Get();
     },
     ShowCargoPopup(){
       this.isState = true;
       this.isPopupeVisible=true;
     },
     AddPopup(){
-      this.selectTypeCargo=[]
-      this.idTypeCargoes.forEach(item=>{
-        this.AllTypeCargo.forEach(x=>{
-          if(item===x.id){
-            this.selectTypeCargo.push(x);
-          }
-        });
-      });
-
-      this.cargoModel.idUser=MainVariables.data().userId;
-      this.cargoModel.typeCargo=this.selectTypeCargo;
-      this.routeModel.cargo = this.cargoModel;
+      this.transportModel.idUser=MainVariables.data().userId;
+      this.routeModel.transport = this.transportModel;
       this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
       this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
 
       console.log("Add Start Date: "+this.routeModel.startDate);
       console.log("Add End Date: "+this.routeModel.endDate);
 
-      CargoService.methods.AddCargo(this.routeModel);
-      this.GetCargoes();
+      TransportService.methods.Add(this.routeModel);
+      this.GetTransports();
       this.ClosePopup();
     },
     ClosePopup(){
-      this.cargoModel ={};
+      this.transportModel ={};
       this.routeModel ={};
       this.isPopupeVisible=false;
-      this.idTypeCargoes = [];
       this.selectedDateStart = ""
       this.selectedDateEnd = ""
     },

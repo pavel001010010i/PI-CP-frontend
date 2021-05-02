@@ -11,6 +11,29 @@ const routes = [
     component: Home
   },
   {
+    path: '/search',
+    name: 'SearchService',
+    component: () => import( '../Services/SearchServices/SearchService'),
+    children:[
+      {
+        path: '/searchCargo',
+        name: 'SearchCargo',
+        component: () => import( '../Services/SearchServices/SearchCargo')
+      },
+      {
+        path: '/searchTransport',
+        name: 'SearchTransport',
+        component: () => import( '../Services/SearchServices/SearchTransport')
+      }
+    ]
+  },
+
+  {
+    path: '/hereservice',
+    name: 'HereService',
+    component: () => import( '../Services/HereAPi/HereService')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(  '../views/About.vue')
@@ -40,14 +63,14 @@ const routes = [
     component: () => import( '../components/Tables/RequestDeliveries/RDIndex')
   },
   {
-    path: '/countries',
-    name: 'Countries',
-    component: () => import( '../components/Tables/Country/CountyIndex')
-  },
-  {
     path: '/cargoes',
     name: 'Cargoes',
     component: () => import( '../components/Tables/Cargo/CargoIndex')
+  },
+  {
+    path: '/transports',
+    name: 'Transports',
+    component: () => import( '../components/Tables/Transport/TransportIndex')
   },
   {
     path: '/registeruser',
@@ -65,12 +88,6 @@ const routes = [
     component: () => import( '../components/Tables/User/UserIndex')
   },
   {
-    path: '/planes',
-    name: 'Planes',
-    component: () => import( '../components/Tables/Plane/PlaneIndex')
-  },
-
-  {
     path: '/register',
     name: 'Register',
     component: () => import( '../views/Register.vue')
@@ -85,7 +102,9 @@ const routes = [
     name: 'RegCust',
     component: () => import( '../components/RegistrationUser/RegistrCustomer/RegistrationCustomer')
   },
-  { path: '/logout', redirect: { name: 'Login' }}
+  {
+    path: '/logout', redirect: { name: 'Login' }
+  }
 ]
 
 const router = createRouter({

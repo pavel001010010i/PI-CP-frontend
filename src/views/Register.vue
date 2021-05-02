@@ -1,6 +1,5 @@
 <template>
   <h1 class="text-dark mb-4" >Select the type of registration</h1>
-  <router-link class="btn-primary btn mr-1"  to="/regcustomer"  >Customer</router-link>
   <router-link class="btn btn-info ml-1" to="/regprovider" >Provider</router-link>
 </template>
 

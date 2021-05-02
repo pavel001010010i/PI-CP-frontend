@@ -1,20 +1,13 @@
 <template>
   <div class="form-row">
-    <div class="col-md-3 mb-3">
-      <label for="validationTooltip01">Country Name</label>
-      <input type="text" class="form-control" id="validationTooltip01" required v-model="searchCountryName">
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltip01">Name Company</label>
+      <input type="text" class="form-control" id="validationTooltip01" placeholder="Name Company" required v-model="nameCompany">
       <div class="valid-tooltip">
         Looks good!
       </div>
     </div>
-    <div class="col-md-3 mb-3">
-      <label >Country</label>
-      <select class="form-control"  placeholder="Select Country" required v-model="countryName">
-        <option v-for="item in itemsCountry" :value="item.iso3" >{{item.name}}</option>
-      </select>
-      <p>{{countryName}}</p>
-    </div>
-    <div class="col-md-2 mb-3">
+    <div class="col-md-4 mb-3">
       <label for="validationTooltip01">Phone number</label>
       <input type="text" class="form-control"  placeholder="Phone number" required v-model="phoneNumber">
       <div class="valid-tooltip">
@@ -60,14 +53,13 @@
 </template>
 
 <script>
+const url = "https://localhost:44332/addprovider";
 export default {
 name: "RegistrationProvider",
   data() {
     return {
-      searchCountryName:'',
-      countryName: '',
-      itemsCountry:[],
-      isoCountry:'',
+      providerId:'',
+      nameCompany: '',
       licenceNumber: '',
       phoneNumber: '',
       email:'',
@@ -78,35 +70,38 @@ name: "RegistrationProvider",
       message:''
     }
   },
-  watch:{
-    searchCountryName:function (data){
-      var vm = this;
-      vm.getCountries(data)
-    }
-  },
   updated() {
   //this.email =
   },
   methods:{
-    getCountries(data){
-      axios.get('http://geohelper.info/api/v1/countries?apiKey=PSHrTJvsO78asPrZOEgC1VKRLp7vCEZ7&locale[lang]=en&pagination[limit]=20&filter[name]='+data)
-     // axios.get('http://geohelper.info/api/v1/countries?apiKey=PSHrTJvsO78asPrZOEgC1VKRLp7vCEZ7&locale[lang]=en&pagination[limit]=20&filter[name]='+data)
-          .then(response=> {
-            var vm = this;
-            vm.itemsCountry=[];
-            response.data.result.forEach(function (item){
+    sendForm:function (){
+      var vm = this;
+      var newProvider = {
+        id:0,
+        nameCompany: vm.nameCompany,
+        licenceNumber: vm.licenceNumber,
+        phoneNumber: vm.phoneNumber,
+        email: vm.email,
+        countresProvider: vm.countries,
+        password: vm.password,
+        passwordConfirm: vm.passwordConfirm,
+        role: 'provider'
+      }
+      var headers= {
+        "Content-Type": "application/json"
+      };
+      axios.post(url, newProvider,headers)
+          .then(response => {
+            this.isSucceful =response.data.exist;
+            this.message = response.data.message;
+            this.$emit('add_info_provide_sucfl',true);
 
-              console.log(item.name);
-              vm.itemsCountry.push(item);
-            });
-            //this.items = response.data.result;
-            //this.items= this.items;
-            console.log(response.data);
+          })
+          .catch((error) => {
 
-          }).catch(function (error) {
-        console.error(error);
-      });
-    },
+            console.log(error);
+          });
+    }
   }
 }
 </script>

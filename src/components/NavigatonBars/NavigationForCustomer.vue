@@ -9,6 +9,9 @@
           <router-link class="nav-link text-dark" to="/cargoes" >My Cargoes</router-link>
         </li>
         <li class="nav-item">
+          <router-link class="nav-link text-dark" to="/transports" >Мой Транспорт</router-link>
+        </li>
+        <li class="nav-item">
           <router-link class="nav-link text-dark" to="/RD" >My Request Delivery</router-link>
         </li>
         <li class="nav-item">

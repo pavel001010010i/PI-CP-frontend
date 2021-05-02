@@ -2,7 +2,7 @@
   <div class="mt-3 mb-3 input-group-text">
     <input type="text" class="form-control" placeholder="First Name" v-model="firstName" />
     <input type="text" class="form-control" placeholder="Last Name" v-model="lastName" />
-    <input  type="number" class="form-control" placeholder="Age" v-model="age" />
+    <input type="number" class="form-control" placeholder="Age" v-model="age" />
     <input type="email" class="form-control" placeholder="Email" v-model="email" :disabled="isEnable" />
     <input type="text" class="form-control" placeholder="Passport Data" v-model="passportData" />
     <select class="form-control" v-model="sex">

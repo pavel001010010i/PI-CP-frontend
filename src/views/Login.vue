@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group-item col-md-5 m-d" style="margin: auto" v-show="kke==''">
+  <div v-show="isVisible" class="list-group-item col-md-5 m-d" style="margin: auto" >
     <p class="text-sm-center display-4 mb-0">Log in</p>
     <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>
     <div class="input-group mb-2 mr-sm-2">
@@ -13,77 +13,84 @@
       <label for="exampleInputPassword1">Password</label>
       <input v-model="passwordField" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
     </div>
-
     <p v-show="isLockout" class="text-danger">{{message}}</p>
     <p class="text-info mt-md-3">Technical support: techsupport@gmail.com</p>
   </div>
-  <button v-show="kke==''" type="submit" class="btn btn-primary mt-3" v-on:click="LoginSubmit">Log in</button>
-  <h1 v-show="kke!=''" class="text-info mt-5 alert alert-info">Hello, {{responseToken.username}} </h1>
+  <button v-show="isVisible"  type="submit" class="btn btn-primary mt-3" @click="LoginSubmit">Log in</button>
+  <h1  class="text-info mt-5 alert alert-info">Hello, Admin:{{IsAdminCheck}}==User:{{IsUserCheck}} </h1>
+
 </template>
 
 <script>
-const urlUser = "https://localhost:44332/token";
+
+import JwtTokenService from "@/Services/JwtTokenService";
+import MainVariables from "@/Services/MainVariables";
+import AuthService from "@/Services/AuthService/auth.service"
+
 
 export default {
 name: "Login",
+  components: {
+  },
   data() {
   return{
     passwordField:'',
     loginField:'',
-    responseToken:{},
+    responseToken:'',
     message:'',
     isLockout: false,
     isToken:'true',
-    kke:'',
+    userName: '',
+    role: '',
+    items:[]
   }
   },
-  updated() {
-  this.kke = localStorage.getItem('user_token');
+  computed: {
+    isVisible(){
+      return this.$store.getters.isVisible;
+    },
+    Token(){
+      return this.$store.getters.getToken;
+    },
+    IsAdminCheck(){
+      return this.$store.getters.getIsAdmin;
+    },
+    IsUserCheck(){
+      return this.$store.getters.getIsUser;
+    }
+
   },
+
   methods:{
+
     LoginSubmit: function (){
-      var vm = this;
-      var userData = {
-        login: vm.loginField,
-        password: vm.passwordField
-      }
-      const headers = {
-        'Content-Type': 'application/json',
-      }
-      axios.post(urlUser,userData,headers)
-          .then(response => {
-            this.responseToken = response.data;
-            if(this.responseToken.lockoutEnable == false){
-              this.$emit('provider_exist_check',this.responseToken.role);
-              this.$emit('exit_logout',true);
-              this.$emit('user_token',this.responseToken.access_token);
-              localStorage.setItem('user_token',this.responseToken.access_token);
-              localStorage.setItem('user_role',this.responseToken.role);
-              localStorage.setItem('user_username',this.responseToken.username);
-              this.isLockout = false;
-              this.message = '';
-            }
-            else {
-              this.isLockout = true;
-              this.message = "User locked :("
-            }
-            if(this.responseToken.succes==false){
-              this.message = this.responseToken.message;
-              this.isLockout = true;
-            }
-          })
+      AuthService.methods.Login({
+        login: this.loginField,
+        password: this.passwordField
+      }).then(response => {
+        if(response.data){
+
+          localStorage.setItem('user_role',JwtTokenService.methods.getUserRoleFromJwToken(response.data));
+          localStorage.setItem('user_email',JwtTokenService.methods.getUserEmailFromJwToken(response.data));
+          localStorage.setItem('user_id',JwtTokenService.methods.getUserIdFromJwToken(response.data));
+          this.$store.dispatch('SetToken',response.data);
+          this.$store.dispatch('GetToken');
+          this.$store.dispatch('IsAdmin');
+          this.$store.dispatch('IsUser');
+          this.isVisible =MainVariables.data().isVisibleButLogInOut;
+          this.responseToken =JwtTokenService.methods.getDecodeJwToken(response.data)
+        }
+        else {
+          this.isLockout = true;
+          this.message = "User locked :("
+        }
+      })
           .catch((error) => {
-            this.$emit('exit_logout',false);
-            this.responseToken = 'error';
-            localStorage.setItem('user_token','');
-            localStorage.setItem('user_role','');
-            localStorage.setItem('user_username','');
             this.isLockout = true;
             this.message = "User not exist :("
             console.log(error);
           });
     }
-
   }
 }
 </script>
