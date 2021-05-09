@@ -3,34 +3,39 @@
     <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
       <div class="row">
         <h5 class="border-white border rounded p-1 mr-3">{{routeModel.countryCodeFrom}}-{{routeModel.countryCodeTo}}</h5>
-        <h5 class="p-1">{{cargo.name}}</h5>
+        <h5 class="p-1">{{item.name}}</h5>
       </div>
       <div>
-        <button class="btn btn-primary mr-1 btn-sm mb-1" @click="edit_cargo">Изменить</button>
-        <button class="btn btn-danger btn-sm mb-1" @click="delete_cargo">Удалить</button>
+        <button class="btn btn-primary mr-1 mb-1 btn-sm " @click="edit_cargo">Изменить</button>
+        <button class="btn btn-danger mb-1 btn-sm" @click="delete_cargo">Удалить</button>
       </div>
 
     </div>
     <div class="card-body row">
       <div class="col-md-2 border-right">
-        <p class="card-text mb-0"><b>ВxШxД:</b> {{cargo.height}}x{{cargo.width}}x{{cargo.depth}}</p>
-        <p class="card-text mb-0"><b>Вес:</b> {{cargo.weight}} кг</p>
-        <p class="card-text mb-0"><b>Активный:</b> {{cargo.isStatus}}</p>
-        <p class="card-text mb-0"><b>Стоимость:</b> {{cargo.costDelivery===0?"договорная":cargo.costDelivery}} {{cargo.costDelivery===0?"":currencyName}}</p>
+        <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
+        <p class="card-text mb-0"><b>Вес:</b> {{item.weight}} кг</p>
+        <p class="card-text mb-0"><b>Стоимость:</b> {{item.costDelivery===0?"договорная":item.costDelivery}} {{item.costDelivery===0?"":currencyName}}</p>
         <p class="card-text mb-0"><b>Способ оплаты:</b> {{paymentName}}</p>
       </div>
       <div class=" col-md-2 border-right ">
         <p class="mb-0 font-weight-bold">Тип груза</p>
-        <li class="card-text mb-0" style="width: 160px" v-for="cargoType in cargo.typeCargo">{{cargoType.name}}</li>
+        <li class="card-text mb-0" style="width: 160px" v-for="cargoType in item.typeCargo">{{cargoType.name}}</li>
       </div>
-      <div class=" col-md-5 border-right">
+      <div class=" col-md-4 border-right">
         <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}}</p>
         <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
       </div>
-      <div class=" col-md-3">
-        <p class="card-text mb-0 font-weight-bold"><b>Дата транспортировки</b></p>
+      <div class=" col-md-2 border-right">
+        <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
         <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
         <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
+      </div>
+      <div class=" col-md-2">
+        <p class="card-text mb-0 font-weight-bold">Контакты</p>
+        <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
+        <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
+        <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
       </div>
 
 
@@ -43,13 +48,16 @@ import RouteMapService from "@/Services/RouteMapServices/RouteMapService"
 import RouteModel from "@/Models/RouteModel"
 import TypeService from "@/Services/TypeServices/TypeService"
 import moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022'
+import AccService from "@/Services/AccountServices/AccountService"
+import Model from "@/Models/UserModel"
 
 export default {
   name: "ItemListCargo",
-  props:['cargo'],
+  props:['item'],
   data(){
     return{
       routeModel:RouteModel.data().routeModel,
+      userModel: Model.data().model,
       currencyName:"",
       paymentName:"",
       dateStart:Date,
@@ -58,21 +66,35 @@ export default {
   },
   components:{
     CargoService,
-    TypeService
+    TypeService, AccService,
+    Model
   },
   updated() {
+    this.GetUserData();
     this.GetRouteMap();
     this.GetNamePayment();
     this.GetNameCurrency();
   },
   mounted() {
+    this.GetUserData();
     this.GetNamePayment();
     this.GetNameCurrency();
     this.GetRouteMap();
   },
   methods:{
+    GetUserData() {
+      AccService.methods.GetUserData(this.item.idUser)
+          .then(response=>{
+            this.userModel.email = response.data.email;
+            this.userModel.phoneNumber = response.data.phoneNumber;
+            this.userModel.nameOrganization = response.data.nameOrganization;
+          })
+          .catch(error=>{
+            console.log(error);
+          })
+    },
     GetRouteMap(){
-      RouteMapService.methods.GetRouteMap(this.cargo.idRouteMap)
+      RouteMapService.methods.GetRouteMap(this.item.idRouteMap)
           .then(response=>{
             this.routeModel.countyFrom = response.data.countyFrom;
             this.routeModel.countyTo = response.data.countyTo;
@@ -100,7 +122,7 @@ export default {
       });
     },
     GetNamePayment(){
-      TypeService.methods.getTypePaymentId(this.cargo.idTypePayment)
+      TypeService.methods.getTypePaymentId(this.item.idTypePayment)
       .then(response => {
         this.paymentName = response.data.name;
       }).catch((error) => {
@@ -108,7 +130,7 @@ export default {
       });
     },
     GetNameCurrency(){
-      TypeService.methods.getTypeCurrencyId(this.cargo.idTypeCurrency)
+      TypeService.methods.getTypeCurrencyId(this.item.idTypeCurrency)
           .then(response => {
             this.currencyName = response.data.name;
           }).catch((error) => {
@@ -124,7 +146,7 @@ export default {
     edit_cargo:function () {
       this.$emit('edit-cargo',
           {
-            cargo: this.cargo,
+            cargo: this.item,
             fullAddressFrom: this.routeModel.fullAddressFrom,
             fullAddressTo: this.routeModel.fullAddressTo,
             idRouteMap: this.routeModel.id,
@@ -134,7 +156,7 @@ export default {
 
     },
     delete_cargo:function () {
-      CargoService.methods.Delete(this.cargo.id);
+      CargoService.methods.Delete(this.item.id);
     }
   }
 }

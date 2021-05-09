@@ -1,114 +1,162 @@
 <template>
-  <div>
-    <h1 class=" text-left">Users</h1>
-    <router-link class="btn btn-outline-info" to="/registeruser">Request Users</router-link>
-    <InputFieldUser :getUser = "getUser"
-                    :isDisableEmailFieldU="isDisableEmailFieldU"
-                    @add-user="addUser"
-                    @saveUpdate-user ="saveUpdateUser"
-                    :isVisible="isVisible"/>
+  <div class="pb-2 ">
+    <h1 class=" text-left">Пользователи</h1>
+    <v-popup v-if="isPopupeVisible"
+             @ClosePopup="ClosePopup"
+             leftBtnTitle="Закрыть"
+             :nameTitle=model.userName>
+
+      <div class="row mt-3 mb-3 col-form-label-sm">
+        <div class="col-md-5 text-left">
+          <div class="row">
+            <div class="col-md-auto">
+              <label>Контактное лицо:</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.name}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-auto">
+              <label>Наименование организации:</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.nameOrganization}}</label>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="col-md-auto">
+              <label>Юридический адрес</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.address}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-auto">
+              <label>УНП/ИНН</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.unp}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-auto">
+              <label>Доп контакт</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.anotherContact}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-1 ">
+
+        </div>
+        <div class="col-md-5 text-left ">
+          <div class="row">
+            <div class="col-md-auto">
+              <label>Моб. телефон</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.phoneNumber}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-auto">
+              <label>Емайл</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.email}}</label>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="col-md-auto">
+              <label>Логин</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.userName}}</label>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="col-md-auto">
+              <label>Статус блокировки</label>
+            </div>
+            <div class="col-md-8">
+              <label class="font-weight-bold">{{model.isLockdown===false?"Активен":"Заблокирован"}}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </v-popup>
+
     <UserList :users ="users"
-                  v-on:delete-user ="deleteUser"
-                  v-on:edit-user="editUserBut"
-              @lock-user = "lockUser"
-    />
-    <p class="text-info text-success" v-show="isSucceful">{{message}}</p>
-    <p class="text-info text-danger" v-show="!isSucceful">{{ message }}</p>
+              @show-info="ShowInfo"
+              @update_users ="GetUsers"/>
   </div>
 </template>
 
 <script>
-const url = "https://localhost:44332/api/Users/";
-const urlUser = "https://localhost:44332/api/Users/";
-const config = {
-  headers: { Authorization: 'Bearer '+ localStorage.getItem('user_token'),
-    Accept: "application/json"}
-};
 
-import InputFieldUser from "@/components/Tables/User/InputFieldUser";
+
 import UserList from "@/components/Tables/User/UserList";
+import AccService from "@/Services/AccountServices/AccountService"
+import store from "@/store.index"
+import vPopup from "@/Services/Popup/user-popup"
+import UserModel from "@/Models/UserModel"
 export default {
   name: "UserIndex",
-  data() {
-    return {
-      getUser: {},
-      isDisableEmailFieldU:false,
-      users: [],
-      isVisible: false,
-      token:'',
-      isSucceful:true,
-      message:''
+  store:store,
+  components:{
+    UserList, AccService,vPopup,
+    UserModel
+  },
+  data(){
+    return{
+      users:[],
+      isPopupeVisible:false,
+      model:UserModel.data().model
     }
   },
-  components:{
-    InputFieldUser,
-    UserList
-  },
   mounted() {
-    this.getUsers();
-    this.token = localStorage.getItem('user_token');
+    this.GetUsers();
   },
 
+  computed:{
+    users(){
+      return store.getters.GetUsers;
+    }
+  },
   methods:{
-    lockUser: function (val){
-      axios.put(url + val.login, val,{
-        headers: {'Content-Type': 'application/json'}})
-          .then(response => {
-            this.isSucceful = response.data.exist;
-            this.message = response.data.message
-            this.getUsers();
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    },
-    saveUpdateUser: function(val){
-      axios.put(url + val.login, val,{
-        headers: {'Content-Type': 'application/json'}})
-          .then(response => {
-            this.isSucceful = response.data.exist;
-            this.message = response.data.message
-            this.getUsers();
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-    },
-    addUser:  function (val) {
-      axios.post(url, val,config)
-          .then(response => {this.getUsers();})
-          .catch((error) => {
-            console.log(error);
-          });
-    },
-
-    deleteUser:function (val){
-      axios.delete(url + val.login,config).
-      then(response=>{
-        this.getUsers();
-      });
-      /*axios.delete(urlUser + val.email).
-      then(response=>{
-      });*/
+    ShowInfo(data){
+      this.isPopupeVisible=true;
+      this.model.name = data.name;
+      this.model.nameOrganization = data.nameOrganization;
+      this.model.address = data.address;
+      this.model.unp = data.unp;
+      this.model.phoneNumber = data.phoneNumber;
+      this.model.anotherContact = data.anotherContact;
+      this.model.email = data.email;
+      this.model.userName = data.userName;
+      this.model.isLockdown = data.isLockdown;
 
     },
-    editUserBut: function (val) {
-      axios.get(url + val.login,config).
-      then(response=>{
-        this.getUser = response.data;
-        this.isDisableEmailFieldU = val.isDisableEmailFieldU
-      });
-
+    GetUsers(){
+        AccService.methods.GetUsers();
     },
-    getUsers: function () {
-      axios.get(url,config)
-          .then(response => (this.users = response.data));}
-  },
+    ClosePopup(){
+      this.isPopupeVisible=false;
+    },
+  }
 }
 </script>
 
 <style scoped>
-
+.v-popup{
+  padding: 16px;
+  position: fixed;
+  top:15%;
+  width:50%;
+  background: #c35656;
+  z-index: 10;
+}
 </style>

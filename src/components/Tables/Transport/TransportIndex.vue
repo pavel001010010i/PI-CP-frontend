@@ -11,60 +11,61 @@
              :is-state="isState"
              right-btn-title-add="Добавить"
              right-btn-title-update="Обновить"
-             leftBtnTitle="Отмена">
+             leftBtnTitle="Отмена"
+             nameTitle="Транспорт">
 
       <div class="form-row">
-        <div class="col-md-2 mb-3">
+        <div class="col-md-auto mb-3">
           <label for="validationTooltip01">Название</label>
           <input type="text" class="form-control" id="validationTooltip01" placeholder="Имя" required v-model="transportModel.name">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-auto mb-3">
           <label for="validationTooltip02">Модель</label>
           <input type="text" class="form-control" id="validationTooltip02" placeholder="Модель" required v-model="transportModel.model">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-1 mb-3">
           <label for="validationTooltip01">Высота</label>
           <input type="number" class="form-control"  placeholder="Высота" required v-model="transportModel.height">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-1 mb-3">
           <label for="validationTooltip01">Ширина</label>
           <input type="number" class="form-control"  placeholder="Ширина" required v-model="transportModel.width">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-1 mb-3">
           <label>Глубина</label>
           <input type="number" class="form-control"  placeholder="Грубина" required v-model="transportModel.depth">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-md-auto mb-3">
           <label>Расход топлива, л/100км</label>
           <input type="number" class="form-control"  placeholder="Расход топлива" required v-model="transportModel.fuelConsumption">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-1 mb-3">
+        <div class="col-md-auto mb-3">
           <label for="validationTooltip03">Активный</label>
-          <input type="checkbox" class="form-control" id="validationTooltip03" placeholder="Активный" required v-model="transportModel.isStatus">
+          <input type="checkbox" class="form-control" id="validationTooltip03" placeholder="Активный" required v-model="transportModel.isActive">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-3 mb-3">
-          <label>Нагрузка на ось</label>
+        <div class="col-md-auto mb-3">
+          <label>Нагрузка на оси</label>
           <Multiselect
               v-model="transportModel.idTransLoadCapacity"
               :options="TransportLoadCapacityOptions"
@@ -73,14 +74,14 @@
               :searchable="true"
           />
         </div>
-        <div class="col-md-1 mb-3">
-          <label>Кол. осей</label>
-          <input type="number" class="form-control"  placeholder="Кол. осей" required v-model="transportModel.numberAxes">
+        <div class="col-md-auto mb-3">
+          <label>Макс. грузоподъемность, кг</label>
+          <input type="number" class="form-control"  placeholder="грузоподъемность" required v-model="transportModel.maxLoadCapacity">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-auto mb-3">
           <label>Тип Кузова</label>
             <Multiselect
               v-model="transportModel.idTypeTransport"
@@ -90,28 +91,31 @@
               :searchable="true"
             />
         </div>
-        <div class="col-2 mb-3">
+        <div class="col-md-auto mb-3">
           <label>С</label>
             <datepicker
               v-model="selectedDateStart"
               :lowerLimit = "new Date()"
           />
         </div>
-        <div class="col-1 mb-3">
+        <div class="col-md-auto mb-3">
           <label>По</label>
             <datepicker
                 v-model="selectedDateEnd"
                 :lowerLimit = "new Date()"
               />
         </div>
-        <div class="col-sm-6">
+
+      </div>
+      <div class="form-row">
+        <div class="col-md-6">
           <HereAddressLookup
               @data="GetFromAddress"
               :address="routeModel.fullAddressFrom"
               name-Search-Label ="Страна/регион/область/адресс отправления"
           />
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
           <HereAddressLookup
               @data="GetToAddress"
               :address="routeModel.fullAddressTo"
@@ -168,8 +172,8 @@ name: "TransportIndex",
       idTypeCargoes: [],
       AllTypeCargo:[],
       selectTypeCargo:[],
-      selectedDateStart: new Date().toLocaleString('en-US', { timeZone: "Europe/Minsk" }),
-      selectedDateEnd: new Date().toLocaleString('en-US', { timeZone: "Europe/Minsk" }),
+      selectedDateStart: new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })),
+      selectedDateEnd: new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })),
     }
   },
   components:{
@@ -222,8 +226,8 @@ name: "TransportIndex",
     UpdatePopup(){
       this.transportModel.idUser=MainVariables.data().userId;
       this.routeModel.transport = this.transportModel;
-      this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
-      this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" })
+      this.routeModel.endDate = new Date(this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
+      this.routeModel.startDate = new Date(this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
 
       TransportService.methods.Update(this.routeModel);
       this.GetTransports();
@@ -245,9 +249,9 @@ name: "TransportIndex",
         numberAxes: data.item.numberAxes,
         idTransLoadCapacity:data.item.idTransLoadCapacity,
         idTypeTransport:data.item.idTypeTransport,
-        axlePressure:data.item.axlePressure,
+        maxLoadCapacity:data.item.maxLoadCapacity,
         fuelConsumption: data.item.fuelConsumption,
-        isStatus:data.item.isStatus
+        isActive:data.item.isActive
       }
 
       this.selectedDateStart = new Date(data.startDate)
@@ -272,9 +276,6 @@ name: "TransportIndex",
       this.routeModel.transport = this.transportModel;
       this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
       this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
-
-      console.log("Add Start Date: "+this.routeModel.startDate);
-      console.log("Add End Date: "+this.routeModel.endDate);
 
       TransportService.methods.Add(this.routeModel);
       this.GetTransports();

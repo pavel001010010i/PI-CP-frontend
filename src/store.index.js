@@ -12,12 +12,16 @@ export default createStore({
             Cargoes:[],
             Transports:[],
             RouteMap: {},
+            TypeCargo:[],
             TypePayments:[],
             TypeCurrencies:[],
             TransportLoadCapacities:[],
             TypeTransports:[],
-
-
+            SearchTransports:[],
+            SearchCargoes:[],
+            Users:[],
+            isVisibleFilterCargo:true,
+            isVisibleFilterTrans:true,
         }
     },
     actions: {
@@ -57,10 +61,44 @@ export default createStore({
         GetTypeTransports({commit}){
             commit('GetTypeTransports')
         },
+        GetSearchTransports({commit},value){
+            commit('GetSearchTransports',value)
+        },
+        GetSearchCargoes({commit},value){
+            commit('GetSearchCargoes',value)
+        },
+        GetUsers({commit}){
+            commit('GetUsers')
+        },
+        SetVisibleCargoFilter({commit},value){
+            commit('SetVisibleCargoFilter',value)
+        },
+        SetVisibleTransFilter({commit},value){
+            commit('SetVisibleTransFilter',value)
+        },
+        GetTypeCargoAll({commit}){
+            commit('GetTypeCargoAll')
+        },
+        GetTypeTransportsAll({commit}){
+            commit('GetTypeTransportsAll')
+        },
+        GetTypeCurrenciesAll({commit}){
+            commit('GetTypeCurrenciesAll')
+        },
+        GetTypePaymentsAll({commit}){
+            commit('GetTypePaymentsAll')
+        }
 
     },
 
     mutations: {
+        GetTypeCargoAll(state){
+            axios.get(Constants.data().url+"api/TypeCargo/get-type-cargo",Constants.data().contTypeHeader).then(response => {
+                state.TypeCargo = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
         SetToken(state,value) {
             localStorage.setItem('user_token',value)
             state.isVisible=false
@@ -102,29 +140,78 @@ export default createStore({
                 }).catch((error)=>{console.log(error);})
         },
         GetTypePayments(state){
-            axios.get(Constants.data().url+"api/typepayment/get",Constants.data().configBearHeader).then(response => {
+            axios.get(Constants.data().url+"api/typepayment/get",Constants.data().contTypeHeader).then(response => {
                 state.TypePayments = response.data;
             }).catch((error) => {
                 console.log(error);
             });
         },
         GetTypeCurrencies(state){
-            axios.get(Constants.data().url+"api/typecurrency/get",Constants.data().configBearHeader).then(response => {
+            axios.get(Constants.data().url+"api/typecurrency/get",Constants.data().contTypeHeader).then(response => {
                 state.TypeCurrencies = response.data;
             }).catch((error) => {
                 console.log(error);
             });
+
         },
         GetTransportLoadCapacities(state){
-            axios.get(Constants.data().url+"api/transportloadcapacity/get",Constants.data().configBearHeader).then(response => {
+            axios.get(Constants.data().url+"api/transportloadcapacity/get",Constants.data().contTypeHeader).then(response => {
                 state.TransportLoadCapacities = response.data;
             }).catch((error) => {
                 console.log(error);
             });
         },
         GetTypeTransports(state){
-            axios.get(Constants.data().url+"api/typetransport/get",Constants.data().configBearHeader).then(response => {
+            axios.get(Constants.data().url+"api/typetransport/get",Constants.data().contTypeHeader).then(response => {
                 state.TypeTransports = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetSearchTransports(state,data){
+            axios.post(Constants.data().url+"api/transport/search-transport",data,Constants.data().contTypeHeader).then(response => {
+                state.SearchTransports = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetSearchCargoes(state,data){
+            axios.post(Constants.data().url+"api/cargo/search-cargo",data,Constants.data().contTypeHeader).then(response => {
+                state.SearchCargoes = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetUsers(state){
+            axios.get(Constants.data().url+"api/user/get-users",Constants.data().configBearHeader).then(response => {
+                state.Users = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        SetVisibleCargoFilter(state,data){
+            state.isVisibleFilterCargo =data;
+        },
+        SetVisibleTransFilter(state,data){
+            state.isVisibleFilterTrans = data;
+        },
+        GetTypeTransportsAll(state){
+            axios.get(Constants.data().url+"api/typetransport/get-type-transport",Constants.data().contTypeHeader).then(response => {
+                state.TypeTransports = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetTypeCurrenciesAll(state){
+            axios.get(Constants.data().url+"api/typecurrency/get-type-currency",Constants.data().contTypeHeader).then(response => {
+                state.TypeCurrencies = response.data;
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetTypePaymentsAll(state){
+            axios.get(Constants.data().url+"api/typepayment/get-type-payment",Constants.data().contTypeHeader).then(response => {
+                state.TypePayments = response.data;
             }).catch((error) => {
                 console.log(error);
             });
@@ -132,6 +219,20 @@ export default createStore({
 
     },
     getters: {
+        GetTypePaymentsAdmin: state=>
+        {
+            return state.TypePayments;
+        },
+        GetTypeTransportsAdmin: state=>
+        {
+            return state.TypeTransports;
+        },
+        GetTypeCurrencyAdmin: state =>{
+            return state.TypeCurrencies;
+        },
+        GetTypeCargo: state=>{
+          return state.TypeCargo;
+        },
         isVisible: state => {
             return state.isVisible
         },
@@ -200,6 +301,21 @@ export default createStore({
             })
             return ob;
         },
+        GetSearchTransports:state=>{
+            return state.SearchTransports;
+        },
+        GetSearchCargoes:state=>{
+            return state.SearchCargoes;
+        },
+        GetUsers:state=>{
+            return state.Users;
+        },
+        GetVisibleFilterCargo:state=>{
+            return state.isVisibleFilterCargo
+        },
+        GetVisibleFilterTrans:state=>{
+            return state.isVisibleFilterTrans
+        }
     }
 })
 

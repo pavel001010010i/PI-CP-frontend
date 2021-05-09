@@ -1,50 +1,32 @@
 <template>
-  <tr :class="{isActive: user.lockoutEnable, isNotActive: !user.lockoutEnable }" >
-    <th>{{user.login}}</th>
-    <th>{{user.role}}</th>
-    <th>{{user.password}}</th>
-    <th>{{user.lockoutEnable}}</th>
-    <th v-show="user.role!='admin'">
-      <button class="btn btn-primary" v-on:click="edit_user">Edit</button>
-      <button class="btn btn-danger" v-on:click="delete_user">Delete</button>
-      <button v-show="!user.lockoutEnable" class="btn btn-warning text-white" v-on:click="lock_user(true)">Lock</button>
-      <button v-show="user.lockoutEnable" class="btn btn-success" v-on:click="lock_user(false)">Unlock</button>
-    </th>
-    <th v-show="user.role=='admin'">======</th>
+  <tr  :class="{isActive: item.isLockdown, isNotActive: !item.isLockdown }" >
+    <td>{{item.userName}}</td>
+    <td>{{item.name}}</td>
+    <td>{{item.email}}</td>
+    <td>{{item.isLockdown === false?"Активен":"Заблокирован"}}</td>
+    <td><button class="btn btn-outline-info" @click="$emit('show-info',item)">Доп. информация</button></td>
+    <td><button class="btn btn-outline-primary" @click="edit_lockout">{{item.isLockdown === false?"Заблокировать":"Разблокировать"}}</button></td>
   </tr>
 </template>
 
 <script>
+import AccService from "@/Services/AccountServices/AccountService"
+import store from "@/store.index"
 export default {
   name: "ItemListUser",
-  props:['user'],
+  store:store,
+  components:{
+    AccService
+  },
+  props:['item'],
   data(){
     return{
      message:''
     }
   },
   methods:{
-    edit_user:function () {
-      var data={
-        login: this.user.login,
-        isDisableEmailFieldU: true
-      };
-      this.$emit('edit-user',data)
-    },
-    delete_user:function () {
-      var data={
-        login: this.user.login
-      };
-      this.$emit('delete-user',data)
-    },
-    lock_user:function (val) {
-      var data={
-        login: this.user.login,
-        role: this.user.role,
-        password:this.user.password,
-        lockoutEnable: val
-      };
-      this.$emit('lock-user',data)
+    edit_lockout(){
+      AccService.methods.UpdateUserLockout(this.item.id);
     }
   }
 }
@@ -55,6 +37,6 @@ export default {
   background: rgba(205, 0, 0, 0.3);
 }
 .isNotActive{
-  background: rgba(1, 200, 0, 0.5);
+  background: rgba(0, 90, 200, 0.3);
 }
 </style>

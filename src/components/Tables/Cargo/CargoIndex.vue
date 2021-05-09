@@ -11,52 +11,53 @@
              :is-state="isState"
              right-btn-title-add="Добавить"
              right-btn-title-update="Обновить"
-             leftBtnTitle="Отмена">
+             leftBtnTitle="Отмена"
+             nameTitle="Грузы">
 
       <div class="form-row">
-        <div class="col-md-2 mb-3">
+        <div class="col-md-auto mb-3">
           <label for="validationTooltip01">Название</label>
-          <input type="text" class="form-control" id="validationTooltip01" placeholder="Name Cargo" required v-model="cargoModel.name">
+          <input type="text" class="form-control" id="validationTooltip01" placeholder="Название" required v-model="cargoModel.name">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-lg-2 mb-3">
           <label for="validationTooltip01">Высота</label>
-          <input type="number" class="form-control"  placeholder="Height" required v-model="cargoModel.height">
+          <input type="number" class="form-control"  placeholder="Высота" required v-model="cargoModel.height">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-lg-2 mb-3">
           <label for="validationTooltip01">Ширина</label>
-          <input type="number" class="form-control"  placeholder="Width" required v-model="cargoModel.width">
+          <input type="number" class="form-control"  placeholder="Широта" required v-model="cargoModel.width">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-lg-2 mb-3">
           <label>Глубина</label>
-          <input type="number" class="form-control"  placeholder="Depth" required v-model="cargoModel.depth">
+          <input type="number" class="form-control"  placeholder="Глубина" required v-model="cargoModel.depth">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-lg-2 mb-3">
           <label>Вес</label>
-          <input type="number" class="form-control"  placeholder="Weight" required v-model="cargoModel.weight">
+          <input type="number" class="form-control"  placeholder="Вес" required v-model="cargoModel.weight">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
         <div class="col-md-1 mb-3">
           <label for="validationTooltip03">Активный</label>
-          <input type="checkbox" class="form-control" id="validationTooltip03" placeholder="is active" required v-model="cargoModel.isStatus">
+          <input type="checkbox" class="form-control" id="validationTooltip03" required v-model="cargoModel.isStatus">
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-12 mb-3">
+        <div class="col-lg-12 mb-3">
           <label>Тип груза</label>
             <Multiselect
               v-model="idTypeCargoes"
@@ -67,14 +68,19 @@
               :searchable="true"
             />
         </div>
-        <div class="col-md-1">
+        <div class="col-lg-2">
           <label>Стоимость</label>
-          <input type="number" class="form-control"  placeholder="Стоимость доставки" required v-model="cargoModel.costDelivery">
+
+          <input type="number" class="form-control" :disabled="isNegotiatedPrice" placeholder="Стоимость доставки" required v-model="cargoModel.costDelivery">
+          <div class="text-left">
+            <input type="checkbox" class="text-left ml-3"  placeholder="is active" v-model="isNegotiatedPrice">
+            <label class="small font-weight-light ml-2">договорная</label>
+          </div>
           <div class="valid-tooltip">
             Looks good!
           </div>
         </div>
-        <div class="col-md-2 mb-3">
+        <div class="col-lg-2 mb-3">
           <label>Тип оплаты</label>
           <Multiselect
               v-model="cargoModel.idTypePayment"
@@ -85,7 +91,7 @@
               :searchable="true"
           />
         </div>
-        <div class="col-md-1 mb-3">
+        <div class="col-lg-2 mb-3">
           <label>Валюта</label>
           <Multiselect
               v-model="cargoModel.idTypeCurrency"
@@ -96,28 +102,30 @@
               :searchable="true"
           />
         </div>
-        <div class="col-2 mb-3">
+        <div class="col-lg-3 mb-3">
           <label>С</label>
             <datepicker
               v-model="selectedDateStart"
               :lowerLimit = "new Date()"
           />
         </div>
-        <div class="col-1 mb-3">
+        <div class="col-lg-2 mb-3">
           <label>По</label>
             <datepicker
                 v-model="selectedDateEnd"
                 :lowerLimit = "new Date()"
               />
         </div>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
           <HereAddressLookup
               @data="GetFromAddress"
+              nameSearchLabel="Введите адрес/страну/город/область отпрвления"
               :address="routeModel.fullAddressFrom"/>
         </div>
-        <div class="col-sm-6">
+        <div class="col-lg-6">
           <HereAddressLookup
               @data="GetToAddress"
+              nameSearchLabel="Введите адрес/страну/город/область конечной точки"
               :address="routeModel.fullAddressTo"/>
         </div>
       </div>
@@ -130,11 +138,6 @@
 </template>
 
 <script>
-const url = "https://localhost:44332/api/Cargoes/";
-const config = {
-  headers: { Authorization: 'Bearer '+ localStorage.getItem('user_token'),
-    Accept: "application/json"}
-};
 
 import CargoList from "@/components/Tables/Cargo/CargoList";
 import vPopup from "@/Services/Popup/modal-popup"
@@ -159,6 +162,7 @@ name: "CustomerIndex",
       cargoes: [],
       isVisible: false,
       token:'',
+      isNegotiatedPrice:false,
 
       message:'',
       role:'',
@@ -194,6 +198,9 @@ name: "CustomerIndex",
     },
     selectedDateEnd(data){
       this.routeModel.endDate = data;
+    },
+    isNegotiatedPrice(data){
+
     }
   },
   mounted() {
@@ -235,7 +242,9 @@ name: "CustomerIndex",
           }
         });
       })
-
+      if(this.isNegotiatedPrice){
+        this.cargoModel.costDelivery = 0;
+      }
       this.cargoModel.idUser=MainVariables.data().userId;
       this.cargoModel.typeCargo=this.selectTypeCargo;
       this.routeModel.cargo = this.cargoModel;
@@ -259,10 +268,13 @@ name: "CustomerIndex",
         width:data.cargo.width,
         depth:data.cargo.depth,
         weight:data.cargo.weight,
-        costDelivery: data.cargo.costDelivery,
+        costDelivery: data.cargo.costDelivery===0 ? null : data.cargo.costDelivery,
         idTypeCurrency: data.cargo.idTypeCurrency,
         idTypePayment: data.cargo.idTypePayment,
         isStatus:data.cargo.isStatus
+      }
+      if(data.cargo.costDelivery === 0){
+        this.isNegotiatedPrice = true;
       }
       data.cargo.typeCargo.forEach(item=>{
         this.idTypeCargoes.push(item.id);
@@ -313,14 +325,14 @@ name: "CustomerIndex",
         });
       });
 
+      if(this.isNegotiatedPrice){
+        this.cargoModel.costDelivery = 0;
+      }
       this.cargoModel.idUser=MainVariables.data().userId;
       this.cargoModel.typeCargo=this.selectTypeCargo;
       this.routeModel.cargo = this.cargoModel;
       this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
       this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
-
-      console.log("Add Start Date: "+this.routeModel.startDate);
-      console.log("Add End Date: "+this.routeModel.endDate);
 
       CargoService.methods.AddCargo(this.routeModel);
       this.GetCargoes();

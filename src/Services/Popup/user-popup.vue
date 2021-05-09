@@ -2,28 +2,27 @@
   <div class="popup_wrapper" ref="popup_wrapper" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
     <div class=" v-popup modal-dialog-scrollable" role="document">
       <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalScrollableTitle">{{nameTitle}}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" @click="ClosePopup">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <slot></slot>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline-danger" @click="ClosePopup">{{ leftBtnTitle }}</button>
-        <button v-show="isState" class="btn btn-outline-primary" @click="AddPopup">{{ rightBtnTitleAdd }}</button>
-        <button v-show="!isState" class="btn btn-outline-primary" @click="UpdatePopup">{{ rightBtnTitleUpdate }}</button>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalScrollableTitle">{{nameTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" @click="ClosePopup">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <slot></slot>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-danger" @click="ClosePopup">{{ leftBtnTitle }}</button>
+        </div>
       </div>
     </div>
   </div>
-  </div>
+
 </template>
 
 <script>
 export default {
-name: "modal-popup",
+name: "user-popup",
   props:{
     nameTitle:{
       type: String,
@@ -86,7 +85,7 @@ name: "modal-popup",
   position: fixed;
   border-radius: 10px;
   top:5%;
-  width:90%;
+  width:40%;
   background: #ffffff;
   box-shadow: 5px 5px 5px 0 #506477;
   z-index: 10;
@@ -99,7 +98,9 @@ name: "modal-popup",
 }
 
 .v-popup__content{
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 </style>

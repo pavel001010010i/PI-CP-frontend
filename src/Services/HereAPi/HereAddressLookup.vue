@@ -1,63 +1,63 @@
 <template>
-  <div class="container">
-    <div >
+  <div class="container text-left mb-3">
+    <div>
       <label for="validationSearch" class="form-label">{{nameSearchLabel }}</label>
       <div class="input-group has-validation">
-        <input type="text" class="form-control" id="validationSearch" aria-describedby="inputGroupPrepend" required v-model="searchString">
+        <input type="search" class="form-control" id="validationSearch" aria-describedby="inputGroupPrepend" required v-model="searchString">
         <div class="invalid-feedback">
           Пожалуйста, ведите значение.
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-3">
-        <label>Полный адресс:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Полный адресс:</label>
       </div>
-      <div class="col-md-7">{{fullAddress}}</div>
+      <div class="col-lg-9">{{fullAddress}}</div>
     </div>
     <div class="row">
-      <div class="col-md-3">
-        <label>Координаты:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Координаты:</label>
       </div>
-      <div class="col-md-7">lat: {{coordinats.lat}}, lng: {{coordinats.lng}}</div>
+      <div class="col-lg-9">lat: {{coordinats.lat}}, lng: {{coordinats.lng}}</div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <label>Улица:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Улица:</label>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-9">
         <input type="text" v-model="street" disabled />
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <label>Город:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Город:</label>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-9">
         <input type="text" v-model="city" disabled />
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <label>Штат/Область:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Штат/Область:</label>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-9">
         <input type="text" v-model="state" disabled />
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <label>Индекс:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Индекс:</label>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-9">
         <input type="text" v-model="postcode" disabled />
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4">
-        <label>Страна:</label>
+      <div class="col-lg-3">
+        <label class="font-weight-bold">Страна:</label>
       </div>
-      <div class="col-md-3">
+      <div class="col-lg-9">
         <input type="text" v-model="country" disabled />
       </div>
     </div>
@@ -145,7 +145,6 @@ export default {
           }, error => {
             console.error(error);
           });
-
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <button class=" btn btn-outline-danger" @click="LogoutM" >Logout</button>
+  <button class=" btn btn-outline-danger" @click="LogoutM" >Выход</button>
 </template>
 
 <script>
@@ -12,11 +12,7 @@ name: "Logout",
   },
   methods:{
     LogoutM: function (){
-      localStorage.setItem('user_token',''),
-        this.$emit('exit_logout',false);
-      this.$emit('logout_but_is',true);
-
-    }
+      localStorage.setItem('user_token','')}
   }
 }
 </script>

@@ -3,12 +3,14 @@
     <button class=" btn btn-outline-info" @click="SetMap" >Построить маршрут</button>
   </div>
     <div class="container">
-      <div class="row align-items-center">
-        <div class="col-sm-6">
-          <HereAddressLookup @coordinats="GetFromCoordinats"/>
+      <div class="row align-items-center mt-2">
+        <div class="col-lg-6">
+          <HereAddressLookup @coordinats="GetFromCoordinats"
+                             nameSearchLabel="Введите адрес/страну/город/область отпрвления"/>
         </div>
-        <div class="col-sm-6">
-          <HereAddressLookup @coordinats="GetToCoordinats"/>
+        <div class="col-lg-6">
+          <HereAddressLookup @coordinats="GetToCoordinats"
+                             nameSearchLabel="Введите адрес/страну/город/область конечной точки"/>
         </div>
       </div>
       <HereMap ref="hereMap" :center="center" />

@@ -1,21 +1,24 @@
 <template>
-  <div id="app" class="container">
-    <vue-notification-list position="bottom-right"></vue-notification-list>
-    <LogInOutShapka  :is_logout_but="!chekAutorizUser" @exit_logout="exit_logout"/>
-    <Shapka v-show="isAdminCheck" />
-    <NavigationForCustomer v-show="isUserCheck" />
-    <NavigationForProvider v-show="chekAutorizUser&&isProviderCheck" />
-    <router-view v-show="isVisible"
-                 />
+  <div >
+    <div id="app">
+      <div class="container boxShadow" >
+        <vue-notification-list position="bottom-right"></vue-notification-list>
+        <LogInOutShapka  :is_logout_but="!chekAutorizUser" @exit_logout="exit_logout"/>
+        <AdminPanel v-show="isAdminCheck" />
+        <UserPanel v-show="isUserCheck" />
+        <router-view v-show="isVisible"
+        />
+      </div>
+    </div>
   </div>
+
 </template>
 <script>
 import store from './store.index'
 import MaintVariables from '@/Services/MainVariables'
-import NavigationForProvider from "@/components/NavigatonBars/NavigationForProvider";
-import NavigationForCustomer from "@/components/NavigatonBars/NavigationForCustomer";
+import UserPanel from "@/components/NavigatonBars/UserNavigation";
 import LogInOutShapka from "@/views/LogInOutShapka";
-import Shapka from "@/views/Shapka";
+import AdminPanel from "@/components/NavigatonBars/AdminPanel";
 import HereService from "@/Services/HereAPi/HereService";
 export default {
   store:store,
@@ -33,10 +36,9 @@ export default {
   },
   components:{
     HereService,
-    Shapka,
+    AdminPanel,
     LogInOutShapka,
-    NavigationForCustomer,
-    NavigationForProvider,
+    UserPanel,
     MaintVariables
   },
   computed:{
@@ -52,41 +54,12 @@ export default {
   },
 
   methods:{
-
     exit_logout: function (val){
       this.chekAutorizUser = val;
     },
     exit_logout_route: function (val){
       this.chekAutorizUser = val;
     },
-    enable_logout_but:function (val){
-      this.isEnableLogOutBut=val;
-
-    },
-    provider_exist_check: function (val){
-      if(val==="customer"){
-        this.isCustomerCheck = true;
-        this.isAdminCheck=false;
-        this.isProviderCheck = false;
-      }else if(val==="provider"){
-        this.isProviderCheck = true;
-        this.isAdminCheck=false;
-        this.isCustomerCheck = false;
-      }else if(val==="admin"){
-        this.isAdminCheck=true;
-        this.isProviderCheck = false;
-        this.isCustomerCheck = false;
-      }else
-      {
-        this.isAdminCheck=false;
-        this.isProviderCheck = false;
-        this.isCustomerCheck = false;
-      }
-
-    },
-    add_info_provide_sucfl: function (val){
-      this.chekAutorizUser = val;
-    }
   },
   mounted() {
     if(localStorage.getItem('user_token')===''){
@@ -120,11 +93,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  min-height:800px;
+  background-color: #9fcdff;
+  padding: 10px;
+}
+.boxShadow {
+  box-shadow: 0 0 20px rgba(0, 0, 0, .4);
+  background-color: white;
+  border-radius: 10px;
 }
 
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+  text-align: center;
 }
 
 #nav a.router-link-exact-active {

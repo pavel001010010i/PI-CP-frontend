@@ -1,21 +1,22 @@
 <template>
   <div class="pb-1">
-    <Item v-for="cargo in cargoes"
-          :cargo="cargo"
+    <Item v-for="item in items"
+          :item="item"
           @edit-cargo="EditCargo"/>
   </div>
 
 </template>
 
 <script>
-import Item from "@/components/Tables/Cargo/ItemListCargo";
+import Item from "@/Services/SearchServices/DataCargo/ItemList";
 
 export default {
 name: "CargoList",
-  props:['cargoes'],
+  props:['items'],
   components:{
     Item,
   },
+
   methods:{
 
     EditCargo(data){

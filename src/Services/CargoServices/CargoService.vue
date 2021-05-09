@@ -28,7 +28,6 @@ name: "CargoService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("The cargo was added successfully","success"));
             store.dispatch('GetCargoes');
-            store.dispatch('GetUpdate');
 
             console.log(response.data);
           })
@@ -51,7 +50,6 @@ name: "CargoService",
     },
     GetCargoes(){
       store.dispatch('GetCargoes');
-      store.dispatch('GetUpdate');
     },
     Delete(data){
       axios.delete(Constants.data().url+ `api/cargo/delete-cargo/${data}`,Constants.data().configBearHeader)
@@ -60,7 +58,6 @@ name: "CargoService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("The cargo was deleted successfully","success"));
             store.dispatch('GetCargoes');
-            store.dispatch('GetUpdate');
 
             console.log(response.status)
           })

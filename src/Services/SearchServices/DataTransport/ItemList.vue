@@ -1,36 +1,40 @@
 <template>
   <div class="card text-left mb-3 small boxShadow">
-    <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
+    <div class="card-header pb-0 pt-1 v-popup__footer">
       <div class="row">
         <h5 class="border-white border rounded p-1 mr-3">{{routeModel.countryCodeFrom}}-{{routeModel.countryCodeTo}}</h5>
-        <h5 class="p-1">{{item.name}}</h5>
+        <h5 class="p-1" >{{item.name}}</h5>
       </div>
       <div>
-        <button class="btn btn-primary mr-1 btn-sm mb-1" @click="edit_item">Изменить</button>
-        <button class="btn btn-danger btn-sm mb-1" @click="delete_item">Удалить</button>
+        <button class="btn btn-primary mr-1 mb-1 btn-sm" @click="edit_item">Изменить</button>
+        <button class="btn btn-danger mb-1 btn-sm" @click="delete_item">Удалить</button>
       </div>
 
     </div>
     <div class="card-body row">
       <div class="col-md-2 border-right">
         <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
-        <p class="card-text mb-0"><b>Активный:</b> {{item.isActive}}</p>
         <p class="card-text mb-0"><b>Расход топлива:</b> <br/>{{item.fuelConsumption}} л/100км</p>
+        <p class="mb-0 "><b>Тип транспорта:</b> {{typeTransportName}}</p>
       </div>
       <div class=" col-md-2 border-right">
         <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{transportLoadCapacityName}}</p>
-        <p class="card-text mb-0"><b>Грузоподъемность:</b> {{item.maxLoadCapacity}} кг</p>
-        <p class="mb-0 "><b>Тип транспорта:</b> {{typeTransportName}}</p>
-
+        <p class="card-text mb-0"><b>Грузоподъемность:</b> {{item.maxLoadCapacity}}</p>
       </div>
-      <div class=" col-md-5 border-right">
+      <div class=" col-md-3 border-right">
         <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}} </p>
         <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
       </div>
-      <div class=" col-md-3">
+      <div class=" col-md-3 border-right">
         <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
         <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
         <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
+      </div>
+      <div class=" col-md-2">
+        <p class="card-text mb-0 font-weight-bold">Контакты</p>
+        <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
+        <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
+        <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
       </div>
     </div>
   </div>
@@ -41,6 +45,8 @@ import RouteMapService from "@/Services/RouteMapServices/RouteMapService"
 import RouteModel from "@/Models/RouteModel"
 import TypeService from "@/Services/TypeServices/TypeService"
 import moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022'
+import AccService from "@/Services/AccountServices/AccountService"
+import Model from "@/Models/UserModel"
 
 export default {
   name: "ItemList",
@@ -48,6 +54,7 @@ export default {
   data(){
     return{
       routeModel:RouteModel.data().routeModel,
+      userModel: Model.data().model,
       typeTransportName:"",
       transportLoadCapacityName:"",
       dateStart:Date,
@@ -56,19 +63,33 @@ export default {
   },
   components:{
     TransportService,
-    TypeService
+    TypeService, AccService,
+    Model
   },
   updated() {
+    this.GetUserData();
     this.GetRouteMap();
     this.GetNameTransport();
     this.GetNameTransportLoadCapacity();
   },
   mounted() {
+    this.GetUserData();
     this.GetNameTransport();
     this.GetNameTransportLoadCapacity();
     this.GetRouteMap();
   },
   methods:{
+    GetUserData() {
+      AccService.methods.GetUserData(this.item.idUser)
+      .then(response=>{
+          this.userModel.email = response.data.email;
+          this.userModel.phoneNumber = response.data.phoneNumber;
+          this.userModel.nameOrganization = response.data.nameOrganization;
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+    },
     GetRouteMap(){
       RouteMapService.methods.GetRouteMap(this.item.idRouteMap)
           .then(response=>{
@@ -137,6 +158,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: dodgerblue;
+  color: white
 }
 .boxShadow {
   margin: 1em auto;

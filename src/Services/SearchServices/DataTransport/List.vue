@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ItemList from "@/components/Tables/Transport/ItemList";
+import ItemList from "@/Services/SearchServices/DataTransport/ItemList";
 import TypeService from "@/Services/TypeServices/TypeService"
 export default {
 name: "List",

@@ -15,9 +15,9 @@ name: "TransportModel",
         width:Number,
         depth:Number,
         numberAxes:Number,
-        axlePressure:Number,
+        maxLoadCapacity:Number,
         fuelConsumption:Number,
-        isStatus:Boolean,
+        isActive:Boolean,
       }
     }
   }

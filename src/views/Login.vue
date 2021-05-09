@@ -1,24 +1,21 @@
-<template>
-  <div v-show="isVisible" class="list-group-item col-md-5 m-d" style="margin: auto" >
-    <p class="text-sm-center display-4 mb-0">Log in</p>
-    <label class="sr-only" for="inlineFormInputGroupUsername2">Username</label>
-    <div class="input-group mb-2 mr-sm-2">
-      <div class="input-group-prepend">
-        <div class="input-group-text">@</div>
-      </div>
-      <input v-model="loginField" type="email" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Username">
+<template >
+  <div v-show="isVisible" class="list-group-item col-md-5 p-3" style="margin: auto" >
+    <h1 class="text-sm-center mb-1">Вход</h1>
+
+    <div class="form-group text-left ">
+      <label for="inlineFormInputGroupUsername2">Логин</label>
+      <input v-model="loginField" type="email" class="form-control" id="inlineFormInputGroupUsername2" placeholder="Логин">
     </div>
 
-    <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      <input v-model="passwordField" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+    <div class="form-group text-left">
+      <label for="exampleInputPassword1">Пароль</label>
+      <input v-model="passwordField" type="password" class="form-control" id="exampleInputPassword1" placeholder="Пароль">
     </div>
+    <router-link to="/register" >Регистрация</router-link>
     <p v-show="isLockout" class="text-danger">{{message}}</p>
-    <p class="text-info mt-md-3">Technical support: techsupport@gmail.com</p>
+    <p class="text-info mt-md-3">Техническая поддержка: techsupport@gmail.com</p>
   </div>
-  <button v-show="isVisible"  type="submit" class="btn btn-primary mt-3" @click="LoginSubmit">Log in</button>
-  <h1  class="text-info mt-5 alert alert-info">Hello, Admin:{{IsAdminCheck}}==User:{{IsUserCheck}} </h1>
-
+  <button v-show="isVisible"  type="submit" class="btn btn-primary m-3" @click="LoginSubmit">Войти</button>
 </template>
 
 <script>
@@ -26,11 +23,14 @@
 import JwtTokenService from "@/Services/JwtTokenService";
 import MainVariables from "@/Services/MainVariables";
 import AuthService from "@/Services/AuthService/auth.service"
+import { useNotificationStore } from '@dafcoe/vue-notification'
+import Constants from "@/Services/Constants";
 
 
 export default {
 name: "Login",
   components: {
+  Constants
   },
   data() {
   return{
@@ -48,17 +48,7 @@ name: "Login",
   computed: {
     isVisible(){
       return this.$store.getters.isVisible;
-    },
-    Token(){
-      return this.$store.getters.getToken;
-    },
-    IsAdminCheck(){
-      return this.$store.getters.getIsAdmin;
-    },
-    IsUserCheck(){
-      return this.$store.getters.getIsUser;
     }
-
   },
 
   methods:{
@@ -69,7 +59,6 @@ name: "Login",
         password: this.passwordField
       }).then(response => {
         if(response.data){
-
           localStorage.setItem('user_role',JwtTokenService.methods.getUserRoleFromJwToken(response.data));
           localStorage.setItem('user_email',JwtTokenService.methods.getUserEmailFromJwToken(response.data));
           localStorage.setItem('user_id',JwtTokenService.methods.getUserIdFromJwToken(response.data));
@@ -86,9 +75,8 @@ name: "Login",
         }
       })
           .catch((error) => {
-            this.isLockout = true;
-            this.message = "User not exist :("
-            console.log(error);
+            const { setNotification } = useNotificationStore()
+            setNotification(Constants.methods.GetNotification(`${error.response.data.message}`,"info"));
           });
     }
   }

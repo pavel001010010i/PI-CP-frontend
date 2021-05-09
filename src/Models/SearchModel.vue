@@ -5,30 +5,28 @@ name: "SearchModel",
   data(){
   return{
     model:{
-
+      idTypePayment:Number,
+      idTypeCurrency:Number,
+      idTypeTransport:Number,
+      typeCargo:[],
       heightOf:Number,
       widthOf:Number,
       depthOf:Number,
+      weightOf:Number,
       cityOf:"",
       stateOf:"",
       postcodeOf:"",
       countryOf:"",
-
       heightTo:Number,
       widthTo:Number,
       depthTo:Number,
+      weightTo:Number,
       cityTo:"",
       stateTo:"",
       postcodeTo:"",
       countryTo:"",
-
-      weight:Number,
-      costDelivery:Number,
-      isStatus:Boolean,
-      typeCargo:[],
-      idRouteMap:Number,
-      idTypePayment:Number,
-      idTypeCurrency:Number,
+      dateOf:Date,
+      dateTo:Date
     },
   }
   }
