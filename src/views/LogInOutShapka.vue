@@ -1,15 +1,22 @@
 <template>
-  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-        <Logout v-show="!isVisibleBut" @exit_logout="exit_logout" @logout_but_is="logout_but_is" @rol_check_f_logout="rol_check_f_logout" />
-        <div v-show="!isVisibleBut" class=" btn-light btn">{{username}}</div>
-        <router-link v-show="isVisibleBut"  class="btn-info btn ml-1"  to="/login" >Login</router-link>
-        <router-link v-show="isVisibleBut" class="btn btn-outline-info mr-1" to="/register" >Register</router-link>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+    <div class="container-fluid">
+      <label></label>
 
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="navbar-nav mr-auto mt-2 mt-lg-0 ">
+        </div>
+        <form class="form-inline my-2 my-lg-0">
+          <router-link class="btn btn-outline-primary mb-1 mr-2" to="/search" >Поиск груза/транспорта</router-link>
+          <router-link class="btn btn-outline-primary  mb-1 mr-2" to="/here-service" >Расчет маршрута</router-link>
+          <router-link v-show="isVisibleBut" class="btn btn-outline-info mb-1 mr-1" to="/register" >Регистрация</router-link>
+          <router-link v-show="isVisibleBut"  class="btn-info btn mb-1 ml-1"  to="/login" >Вход</router-link>
+          <div v-show="!isVisibleBut" class=" btn-light mb-1 btn">{{username}}</div>
+          <Logout v-show="!isVisibleBut" @click="Exit" />
+        </form>
       </div>
-    </div>
 
+    </div>
   </nav>
 
 
@@ -18,33 +25,35 @@
 <script>
 import Logout from "@/views/Logout";
 import Login from "@/views/Login";
+import MainVariables from "@/Services/MainVariables";
 export default {
 name: "LogInOutShapka",
   props:['is_logout_but'],//true
   data(){
   return{
-    isVisibleBut:this.is_logout_but,
     username:''
-
-  }
+    }
+  },
+  computed: {
+  isVisibleBut(){
+        return MainVariables.data().isVisibleButLogInOut
+    }
   },
   updated() {
-  this.isVisibleBut = this.is_logout_but;
-  this.username=localStorage.getItem('user_username')
+  this.isVisibleBut = MainVariables.data().isVisibleButLogInOut;
+  this.username= MainVariables.data().email
 
   },
   components:{
-  Login,
+    Login,
     Logout
-  }, methods:{
-    exit_logout: function (val){
-      this.$emit('exit_logout',val);
-    },
-    logout_but_is: function (val) {
-      this.isVisibleBut= val;
-    },
-    rol_check_f_logout:function (val){
-      this.$emit('rol_check_f_logout',val)
+  },
+
+  methods:{
+    Exit: function (){
+      this.$store.dispatch("RemoveToken");
+      this.$store.dispatch('GetToken');
+      this.$store.dispatch('IsAdmin')
     }
   }
 }

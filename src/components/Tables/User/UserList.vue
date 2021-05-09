@@ -1,34 +1,33 @@
 <template>
-  <div >
-    <table class="table table-hover ">
-      <thead class="thead-dark">
-      <tr>
-        <th>Login</th>
-        <th>Role</th>
-        <th>Password</th>
-        <th>Lockout Enable</th>
-        <th>Edit/Delete</th>
-      </tr>
-      </thead>
-      <tbody><ItemListUser v-for="user in users"
-                               v-bind:user="user"
-                               v-on:edit-user="editUserBut"
-                               v-on:delete-user ="deleteUser"
-                           @lock-user = "lockUser"
-      />
-      </tbody>
-    </table>
-  </div>
+  <table class="table ">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">Логин</th>
+      <th scope="col">Имя</th>
+      <th scope="col">Емейл</th>
+      <th scope="col">Статус блокировки</th>
+      <th scope="col">Доп. Информация</th>
+      <th scope="col">Блокировка</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ItemList v-for="item in users"
+              :item="item"
+              @show-info="$emit('show-info',item)"
+              @update_users ="$emit('update_users')"
+    />
+    </tbody>
+  </table>
 </template>
 
 <script>
-import ItemListUser from "@/components/Tables/User/ItemListUser";
+import ItemList from "@/components/Tables/User/ItemListUser";
 
 export default {
   name: "UserList",
   props:['users'],
   components:{
-    ItemListUser
+    ItemList
   },
   methods:{
     editUserBut: function (val){
