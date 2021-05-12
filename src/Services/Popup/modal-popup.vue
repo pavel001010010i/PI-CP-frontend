@@ -78,7 +78,6 @@ name: "modal-popup",
   right: 0;
   left: 0;
   top:0;
-  bottom: -9%;
   z-index: 9;
 }
 .v-popup{
@@ -86,10 +85,11 @@ name: "modal-popup",
   position: fixed;
   border-radius: 10px;
   top:5%;
-  width:90%;
+  max-width:90%;
   background: #ffffff;
-  box-shadow: 5px 5px 5px 0 #506477;
+  box-shadow: 0px 0px 15px 0 rgba(0, 0, 0, .4);
   z-index: 10;
+  min-height: 70%;
 }
 
 .v-popup__header, .v-popup__footer {

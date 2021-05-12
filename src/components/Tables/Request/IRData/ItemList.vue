@@ -1,94 +1,74 @@
 <template>
-  <div class="card text-left mb-3 boxShadow small">
+  <div class="card text-left mb-3 small boxShadow">
     <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
       <div class="row">
         <h5 class="border-white border rounded p-1 mr-3">{{routeModel.countryCodeFrom}}-{{routeModel.countryCodeTo}}</h5>
         <h5 class="p-1">{{item.name}}</h5>
+      </div>
+      <div>
+        <button class="btn btn-primary mr-1 btn-sm mb-1" @click="edit_item">Изменить</button>
+        <button class="btn btn-danger btn-sm mb-1" @click="delete_item">Удалить</button>
       </div>
 
     </div>
     <div class="card-body row">
       <div class="col-md-2 border-right">
         <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
-        <p class="card-text mb-0"><b>Вес:</b> {{item.weight}} кг</p>
-        <p class="card-text mb-0"><b>Стоимость:</b> {{item.costDelivery===0?"договорная":item.costDelivery}} {{item.costDelivery===0?"":currencyName}}</p>
-        <p class="card-text mb-0"><b>Способ оплаты:</b> {{paymentName}}</p>
-      </div>
-      <div class=" col-md-2 border-right ">
-        <p class="mb-0 font-weight-bold">Тип груза</p>
-        <li class="card-text mb-0" style="width: 160px" v-for="cargoType in item.typeCargo">{{cargoType.name}}</li>
-      </div>
-      <div class=" col-md-4 border-right">
-        <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}}</p>
-        <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
+        <p class="card-text mb-0"><b>Активный:</b> {{item.isActive}}</p>
+        <p class="card-text mb-0"><b>Расход топлива:</b> <br/>{{item.fuelConsumption}} л/100км</p>
       </div>
       <div class=" col-md-2 border-right">
+        <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{transportLoadCapacityName}}</p>
+        <p class="card-text mb-0"><b>Грузоподъемность:</b> {{item.maxLoadCapacity}} кг</p>
+        <p class="mb-0 "><b>Тип транспорта:</b> {{typeTransportName}}</p>
+
+      </div>
+      <div class=" col-md-5 border-right">
+        <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}} </p>
+        <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
+      </div>
+      <div class=" col-md-3">
         <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
         <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
         <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
       </div>
-      <div class=" col-md-2">
-        <p class="card-text mb-0 font-weight-bold">Контакты</p>
-        <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
-        <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
-        <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
-      </div>
-
-
     </div>
   </div>
   </template>
 <script>
-import CargoService from "@/Services/CargoServices/CargoService"
+import TransportService from "@/Services/TransportServices/TransportService"
 import RouteMapService from "@/Services/RouteMapServices/RouteMapService"
 import RouteModel from "@/Models/RouteModel"
 import TypeService from "@/Services/TypeServices/TypeService"
 import moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022'
-import AccService from "@/Services/AccountServices/AccountService"
-import Model from "@/Models/UserModel"
 
 export default {
-  name: "ItemListCargo",
+  name: "ItemList",
   props:['item'],
   data(){
     return{
       routeModel:RouteModel.data().routeModel,
-      userModel: Model.data().model,
-      currencyName:"",
-      paymentName:"",
+      typeTransportName:"",
+      transportLoadCapacityName:"",
       dateStart:Date,
       dateEnd:Date,
     }
   },
   components:{
-    CargoService,
-    TypeService, AccService,
-    Model
+    TransportService,
+    TypeService
   },
   updated() {
-    this.GetUserData();
     this.GetRouteMap();
-    this.GetNamePayment();
-    this.GetNameCurrency();
+    this.GetNameTransport();
+    this.GetNameTransportLoadCapacity();
   },
   mounted() {
-    this.GetUserData();
-    this.GetNamePayment();
-    this.GetNameCurrency();
+    this.GetNameTransport();
+    this.GetNameTransportLoadCapacity();
     this.GetRouteMap();
   },
   methods:{
-    GetUserData() {
-      AccService.methods.GetUserData(this.item.idUser)
-          .then(response=>{
-            this.userModel.email = response.data.email;
-            this.userModel.phoneNumber = response.data.phoneNumber;
-            this.userModel.nameOrganization = response.data.nameOrganization;
-          })
-          .catch(error=>{
-            console.log(error);
-          })
-    },
     GetRouteMap(){
       RouteMapService.methods.GetRouteMap(this.item.idRouteMap)
           .then(response=>{
@@ -117,32 +97,26 @@ export default {
         console.log(error);
       });
     },
-    GetNamePayment(){
-      TypeService.methods.getTypePaymentId(this.item.idTypePayment)
+    GetNameTransport(){
+      TypeService.methods.getTypeTransportId(this.item.idTypeTransport)
       .then(response => {
-        this.paymentName = response.data.name;
+        this.typeTransportName = response.data.name;
       }).catch((error) => {
         console.log(error);
       });
     },
-    GetNameCurrency(){
-      TypeService.methods.getTypeCurrencyId(this.item.idTypeCurrency)
+    GetNameTransportLoadCapacity(){
+      TypeService.methods.GetTransportLoadCapacityId(this.item.idTransLoadCapacity)
           .then(response => {
-            this.currencyName = response.data.name;
+            this.transportLoadCapacityName =  `${response.data.name} (${response.data.minValue}-${response.data.maxValue}) кг`;
           }).catch((error) => {
         console.log(error);
       });
     },
-    GetTypePayments(){
-      TypeService.methods.GetTypePayments();
-    },
-    GetTypeCurrencies(){
-      TypeService.methods.GetTypeCurrencies();
-    },
-    edit_cargo:function () {
-      this.$emit('edit-cargo',
+    edit_item:function () {
+      this.$emit('edit-item',
           {
-            cargo: this.item,
+            item: this.item,
             fullAddressFrom: this.routeModel.fullAddressFrom,
             fullAddressTo: this.routeModel.fullAddressTo,
             idRouteMap: this.routeModel.id,
@@ -151,8 +125,8 @@ export default {
           });
 
     },
-    delete_cargo:function () {
-      CargoService.methods.Delete(this.item.id);
+    delete_item:function () {
+      TransportService.methods.Delete(this.item.id);
     }
   }
 }

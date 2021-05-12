@@ -6,8 +6,7 @@
         <h5 class="p-1" >{{item.name}}</h5>
       </div>
       <div>
-        <button class="btn btn-primary mr-1 mb-1 btn-sm" @click="edit_item">Изменить</button>
-        <button class="btn btn-danger mb-1 btn-sm" @click="delete_item">Удалить</button>
+        <button class="btn btn-primary mr-1 btn-sm mb-1 butn" @click="request_item">Оставить заявку</button>
       </div>
 
     </div>
@@ -134,15 +133,15 @@ export default {
         console.log(error);
       });
     },
-    edit_item:function () {
-      this.$emit('edit-item',
+    request_item:function () {
+      this.$emit('request-item',
           {
             item: this.item,
-            fullAddressFrom: this.routeModel.fullAddressFrom,
-            fullAddressTo: this.routeModel.fullAddressTo,
-            idRouteMap: this.routeModel.id,
-            endDate: this.routeModel.endDate,
-            startDate: this.routeModel.startDate
+            routeModel: this.routeModel,
+            transportLoadCapacityName: this.transportLoadCapacityName,
+            typeTransportName: this.typeTransportName,
+            dateStart : moment(this.routeModel.startDate).format('DD-MMMM-YYYY'),
+            dateEnd : moment(this.routeModel.endDate).format('DD-MMMM-YYYY')
           });
 
     },
@@ -164,5 +163,16 @@ export default {
 .boxShadow {
   margin: 1em auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+}
+.butn{
+  background-color: white;
+  color: dodgerblue;
+  border: 1px solid dodgerblue;
+  border-radius: 5px;
+}
+.butn:hover{
+  background-color: dodgerblue;
+  color: white;
+  border: 1px solid white;
 }
 </style>

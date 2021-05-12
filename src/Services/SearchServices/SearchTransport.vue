@@ -1,4 +1,7 @@
 <template>
+  <div>
+
+  </div>
   <div class="p-3">
     <div class="justify-content-between d-flex">
       <h2 class="text-center">Поиск транспорта</h2>
@@ -11,6 +14,61 @@
       </div>
 
     </div>
+    <v-popup v-if="isPopupeVisible"
+             @ClosePopup="ClosePopup"
+             @AddPopup="AddPopup"
+             :is-state="isState"
+             right-btn-title-add="Добавить"
+             leftBtnTitle="Отмена"
+             nameTitle="Транспорт">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card text-left mb-3 small boxShadow">
+            <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
+              <div class="row">
+                <h5 class="border-white border rounded p-1 mr-3">{{reqTranModel.routeModel.countryCodeFrom}}-{{reqTranModel.routeModel.countryCodeTo}}</h5>
+                <h5 class="p-1">{{reqTranModel.item.name}}</h5>
+              </div>
+            </div>
+            <div class="card-body row">
+              <div class="col-lg-3 border-right">
+                <p class="card-text mb-0"><b>ВxШxД:</b> {{reqTranModel.item.height}}x{{reqTranModel.item.width}}x{{reqTranModel.item.depth}}</p>
+                <p class="card-text mb-0"><b>Активный:</b> {{reqTranModel.item.isActive}}</p>
+                <p class="card-text mb-0"><b>Расход топлива:</b> {{reqTranModel.item.fuelConsumption}} л/100км</p>
+              </div>
+              <div class=" col-lg-3 border-right">
+                <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{reqTranModel.transportLoadCapacityName}}</p>
+                <p class="card-text mb-0"><b>Грузоподъемность:</b> {{reqTranModel.item.maxLoadCapacity}} кг</p>
+                <p class="mb-0 "><b>Тип транспорта:</b> {{reqTranModel.typeTransportName}}</p>
+              </div>
+              <div class=" col-lg-3 border-right">
+                <p class="card-text mb-0"><b>От:</b> {{reqTranModel.routeModel.fullAddressFrom}} </p>
+                <p class="card-text mb-0"><b>До:</b> {{reqTranModel.routeModel.fullAddressTo}}</p>
+              </div>
+              <div class=" col-lg-3">
+                <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
+                <p class="card-text mb-0"><b>С:</b> {{reqTranModel.dateStart}}</p>
+                <p class="card-text mb-0"><b>По</b> {{reqTranModel.dateEnd}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-12">
+          <div class="text-left mb-2">
+            <label><b>Выберите грузы</b></label>
+            <Multiselect
+                v-model="idCargoes"
+                mode="tags"
+                :options="cargoOptions"
+                label="name"
+                trackBy="name"
+                :searchable="true"
+            />
+          </div>
+        </div>
+      </div>
+
+    </v-popup>
     <div v-show="!isHiddenForm" class="row border rounded mb-3">
       <div class="row col-md-3">
         <div class="col-md-6 text-left ">
@@ -99,6 +157,7 @@
         <div class="mb-2">
           <label>С</label>
           <datepicker class="form-control"
+              :locale="ru"
               v-model="selectedDateStart"
               :lowerLimit = "new Date()"
           />
@@ -106,8 +165,9 @@
         <div class="mb-2">
           <label>По</label>
           <datepicker class="form-control"
-              v-model="selectedDateEnd"
-              :lowerLimit = "new Date()"
+                      :locale="ru"
+                      v-model="selectedDateEnd"
+                      :lowerLimit = "new Date()"
           />
         </div>
         <div class="text-left mb-2">
@@ -123,8 +183,9 @@
       </div>
     </div>
 
+
   </div>
-  <List :items ="transports"  />
+  <List :items ="transports" @request-item="RequestItem"  />
 </template>
 
 <script>
@@ -136,6 +197,16 @@ import SearchModel from "@/Models/SearchModel"
 import TransportService from "@/Services/TransportServices/TransportService"
 import List from "@/Services/SearchServices/DataTransport/List";
 import SearchService from "@/Services/SearchServices/SearchService"
+import { ru } from 'date-fns/locale'
+import RequestModel from "@/Models/OrderRequestModel"
+import TransModel from "@/Models/TransportModel"
+import vPopup from "@/Services/Popup/modal-popup"
+import CargoService from "@/Services/CargoServices/CargoService"
+import Constants from "@/Services/Constants"
+import MainVariables from "@/Services/MainVariables"
+import ROService from "@/Services/RequestAndOrderServices/Request-Order-Service"
+
+
 
 export default {
 name: "SearchTransport",
@@ -146,15 +217,30 @@ name: "SearchTransport",
     Datepicker,
     SearchModel,
     TransportService,
-    List, SearchService
+    List, SearchService,
+    RequestModel, TransModel,
+    vPopup, CargoService,
+    ROService
   },
   data(){
     return{
+
+      isState:true,
+      isPopupeVisible:false,
+      ru:ru,
       isHiddenForm:Boolean,
       searchModel: SearchModel.data().model,
       idTypeTransport:Number,
       srcBut:this.isHiddenForm?"arrowUp.png":"arrowDown.png",
       transports: [],
+
+      reqTranModel: TransModel.data().requestModel,
+      requestModel: RequestModel.data().requestModel,
+      orderDataModel: RequestModel.data().orderDataModel,
+      cargoes:[],
+      idCargoes:[],
+      selectCargoes:[],
+      cargoOptions:[],
 
       TypeTransportOptions:[],
       selectedDateStart:new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })) ,
@@ -162,11 +248,44 @@ name: "SearchTransport",
     }
   },
   mounted() {
+    this.GetCargoes();
     this.GetTransports();
     this.GetTypeTransports();
     this.GetTransportLoadCapacities();
   },
   methods:{
+    RequestItem(data){
+      this.isPopupeVisible = true,
+      this.reqTranModel = data;
+
+    },
+    AddPopup(){
+      this.selectCargoes=[]
+      this.idCargoes.forEach(item=>{
+        this.cargoes.forEach(x=>{
+          if(item===x.id){
+            this.selectCargoes.push(x);
+          }
+        });
+      });
+      this.orderDataModel.idUser = MainVariables.data().userId;
+      this.orderDataModel.status = false;
+      this.orderDataModel.cargoes = this.selectCargoes;
+
+      this.requestModel.idTransport = this.reqTranModel.item.id;
+      this.requestModel.idUser = this.reqTranModel.item.idUser;
+      this.requestModel.status = false;
+      this.requestModel.orderData = this.orderDataModel;
+      this.requestModel.name = "Заказ номер: "+(new Date().getSeconds())
+
+      ROService.methods.AddRequest(this.requestModel);
+
+      this.ClosePopup();
+    },
+    ClosePopup(){
+      this.isPopupeVisible = false;
+      this.idCargoes=[];
+    },
     Search(){
       this.searchModel.dateOf = new Date(this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
       this.searchModel.dateTo = new Date(this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
@@ -185,6 +304,24 @@ name: "SearchTransport",
         this.$store.dispatch('SetVisibleTransFilter',true)
       }
     },
+    GetCargoes(){
+      this.cargoOptions=[];
+      axios.get(Constants.data().url+"api/cargo/get-cargoes-request",Constants.data().configBearHeader).then(response => {
+        this.cargoes = response.data;
+        this.cargoes.forEach(item=>{
+          if(item.isStatus){
+            this.cargoOptions.push(
+                {
+                  value:item.id,
+                  name:item.name
+                });
+          }
+        });
+      }).catch((error) => {
+        console.log(error);
+      });
+
+    },
     GetTypeTransports(){
       this.TypeTransportOptions=[];
       TypeService.methods.GetTypeTransportsAll();
@@ -198,6 +335,9 @@ name: "SearchTransport",
     }
   },
   computed:{
+    /*cargoes(){
+      return store.getters.GetCargoes;
+    },*/
     isHiddenForm() {
       return this.$store.getters.GetVisibleFilterTrans;
     },
@@ -216,4 +356,8 @@ name: "SearchTransport",
 
 <style src="@vueform/multiselect/themes/default.css">
 
+.boxShadow {
+  margin: 1em auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+}
 </style>

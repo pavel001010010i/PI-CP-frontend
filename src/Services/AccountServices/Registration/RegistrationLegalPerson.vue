@@ -133,7 +133,7 @@ name: "RegistrationProvider",
         }
         if(error.response.data.PasswordConfirm){
           const { setNotification } = useNotificationStore()
-          setNotification(Constants.methods.GetNotification(error.response.data.PasswordConfirm[1],"alert"));
+          setNotification(Constants.methods.GetNotification(error.response.data.PasswordConfirm[0],"alert"));
         }
         if(error.response.data.Name){
           const { setNotification } = useNotificationStore()

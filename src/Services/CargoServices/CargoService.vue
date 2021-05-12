@@ -11,14 +11,14 @@ name: "CargoService",
       axios.put(Constants.data().url+"api/cargo/update-cargo",data,Constants.data().configBearHeader)
           .then(response => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The cargo was updated successfully","success"));
+            setNotification(Constants.methods.GetNotification("Ваш груз обновлен!","info"));
             store.dispatch('GetCargoes');
             store.dispatch('GetUpdate');
 
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("Error. Cargo not updated","alert"));
+            setNotification(Constants.methods.GetNotification("Ошибка. Не возможно обновить груз!","alert"));
             console.log(error);
           });
     },
@@ -26,7 +26,7 @@ name: "CargoService",
       axios.post(Constants.data().url+"api/cargo/add-cargo",data,Constants.data().configBearHeader)
           .then(response => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The cargo was added successfully","success"));
+            setNotification(Constants.methods.GetNotification("Груз успешно добавлен!","success"));
             store.dispatch('GetCargoes');
 
             console.log(response.data);
@@ -43,7 +43,7 @@ name: "CargoService",
 
               }
             }else {
-              setNotification(Constants.methods.GetNotification(`Error. Cargo not added`,"alert"));
+              setNotification(Constants.methods.GetNotification(`Ошибка. Груз не удалось добавить!`,"alert"));
             }
             console.log(error.response);
           });
@@ -56,14 +56,14 @@ name: "CargoService",
           .then(response => {
             console.log(response.status)
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The cargo was deleted successfully","success"));
+            setNotification(Constants.methods.GetNotification("Груз успешно удален!","info"));
             store.dispatch('GetCargoes');
 
             console.log(response.status)
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("Error. Cargo not deleted","alert"));
+            setNotification(Constants.methods.GetNotification("Ошибка. Груз не удален!","alert"));
             console.log(error);
           });
     }

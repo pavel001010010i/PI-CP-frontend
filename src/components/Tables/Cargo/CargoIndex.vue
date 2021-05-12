@@ -15,7 +15,7 @@
              nameTitle="Грузы">
 
       <div class="form-row">
-        <div class="col-md-auto mb-3">
+        <div class="col-lg-2 mb-3">
           <label for="validationTooltip01">Название</label>
           <input type="text" class="form-control" id="validationTooltip01" placeholder="Название" required v-model="cargoModel.name">
           <div class="valid-tooltip">
@@ -104,14 +104,16 @@
         </div>
         <div class="col-lg-3 mb-3">
           <label>С</label>
-            <datepicker
+            <datepicker class="form-control"
+              :locale="ru"
               v-model="selectedDateStart"
               :lowerLimit = "new Date()"
           />
         </div>
         <div class="col-lg-2 mb-3">
           <label>По</label>
-            <datepicker
+            <datepicker class="form-control"
+                :locale="ru"
                 v-model="selectedDateEnd"
                 :lowerLimit = "new Date()"
               />
@@ -150,12 +152,13 @@ import Constants from "@/Services/Constants"
 import Datepicker from 'vue3-datepicker'
 import HereAddressLookup from "@/Services/HereAPi/HereAddressLookup";
 import RouteModel from "@/Models/RouteModel"
+import { ru } from 'date-fns/locale'
 
 export default {
 name: "CustomerIndex",
   data() {
     return {
-
+      ru:ru,
       isPopupeVisible:false,
       getCargo: {},
       isDisableEmailField:false,
@@ -213,7 +216,6 @@ name: "CustomerIndex",
   },
   computed:{
     cargoes(){
-      console.log("from compudet");
       return this.$store.getters.GetCargoes;
     },
     TypeCurrencyOptions(){

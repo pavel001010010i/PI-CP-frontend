@@ -22,9 +22,17 @@ export default createStore({
             Users:[],
             isVisibleFilterCargo:true,
             isVisibleFilterTrans:true,
+            RequestProvider:[],
+            RequestCustomer:[]
         }
     },
     actions: {
+        GetRProvider({commit}) {
+            commit('GetRProvider')
+        },
+        GetRCustomer({commit}) {
+            commit('GetRCustomer')
+        },
         SetToken({commit},value) {
             commit('SetToken',value)
         },
@@ -92,6 +100,23 @@ export default createStore({
     },
 
     mutations: {
+        GetRProvider(state) {
+            axios.get(Constants.data().url+"api/RequestOrder/get-requests-providers",Constants.data().configBearHeader).then(response => {
+                state.RequestProvider = response.data;
+                console.log(response.data)
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetRCustomer(state) {
+            axios.get(Constants.data().url+"api/RequestOrder/get-requests-customers",Constants.data().configBearHeader).then(response => {
+                state.RequestCustomer = response.data;
+                console.log(response.data)
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
         GetTypeCargoAll(state){
             axios.get(Constants.data().url+"api/TypeCargo/get-type-cargo",Constants.data().contTypeHeader).then(response => {
                 state.TypeCargo = response.data;
@@ -219,6 +244,12 @@ export default createStore({
 
     },
     getters: {
+        GetRProvider: state=>{
+            return state.RequestProvider;
+        } ,
+        GetRCustomer: state =>  {
+            return state.RequestCustomer
+        },
         GetTypePaymentsAdmin: state=>
         {
             return state.TypePayments;
