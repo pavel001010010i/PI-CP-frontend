@@ -23,10 +23,18 @@ export default createStore({
             isVisibleFilterCargo:true,
             isVisibleFilterTrans:true,
             RequestProvider:[],
-            RequestCustomer:[]
+            RequestCustomer:[],
+            OrderProvider:[],
+            OrderCustomer:[]
         }
     },
     actions: {
+        GetOProvider({commit}) {
+            commit('GetOProvider')
+        },
+        GetOCustomer({commit}) {
+            commit('GetOCustomer')
+        },
         GetRProvider({commit}) {
             commit('GetRProvider')
         },
@@ -100,6 +108,23 @@ export default createStore({
     },
 
     mutations: {
+        GetOProvider(state) {
+            axios.get(Constants.data().url+"api/RequestOrder/get-orders-providers",Constants.data().configBearHeader).then(response => {
+                state.OrderProvider = response.data;
+                console.log(response.data)
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        GetOCustomer(state) {
+            axios.get(Constants.data().url+"api/RequestOrder/get-orders-customers",Constants.data().configBearHeader).then(response => {
+                state.OrderCustomer = response.data;
+                console.log(response.data)
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
         GetRProvider(state) {
             axios.get(Constants.data().url+"api/RequestOrder/get-requests-providers",Constants.data().configBearHeader).then(response => {
                 state.RequestProvider = response.data;
@@ -244,6 +269,12 @@ export default createStore({
 
     },
     getters: {
+        GetOProvider: state=>{
+            return state.OrderProvider;
+        } ,
+        GetOCustomer: state =>  {
+            return state.OrderCustomer
+        },
         GetRProvider: state=>{
             return state.RequestProvider;
         } ,

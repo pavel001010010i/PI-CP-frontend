@@ -2,7 +2,6 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light ">
     <div class="container-fluid">
       <label></label>
-
       <div class="collapse navbar-collapse" id="navbarNav">
         <div class="navbar-nav mr-auto mt-2 mt-lg-0 ">
         </div>
@@ -28,7 +27,6 @@ import Login from "@/views/Login";
 import MainVariables from "@/Services/MainVariables";
 export default {
 name: "LogInOutShapka",
-  props:['is_logout_but'],//true
   data(){
   return{
     username:''

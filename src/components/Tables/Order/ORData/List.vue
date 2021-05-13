@@ -2,15 +2,13 @@
   <div class="pb-1 ">
     <ItemList  v-for="item in items"
                :item="item"
-               @delete-item = "DeleteItem"
-               @accept-item = "AcceptItem"
-          />
+                @delete-item = "DeleteItem"/>
   </div>
 
 </template>
 
 <script>
-import ItemList from "@/components/Tables/Request/IRData/ItemList";
+import ItemList from "@/components/Tables/Order/ORData/ItemList";
 export default {
 name: "List",
   props:['items'],
@@ -21,9 +19,6 @@ name: "List",
   methods:{
     DeleteItem(data){
       this.$emit('delete-item',data);
-    },
-    AcceptItem(data){
-      this.$emit('accept-item',data);
     }
   }
 }

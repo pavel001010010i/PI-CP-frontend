@@ -46,39 +46,53 @@
 
     <div class="boxShadow small">
       <div class="row text-left">
-        <div class="ml-3" style=" background-color: #007bff; width: 10px; border-radius: 10px; border-bottom-right-radius: 0px; border-top-right-radius: 0px"></div>
-        <div class="col-lg-2 p-2">
+        <div class="ml-3" :class="{done:item.orderDats[0].status,inProgress: !item.orderDats[0].status}"></div>
+        <div class="col-lg-1 p-2">
           <p>{{item.name}}</p>
-          <p></p>
         </div>
-        <div class="col-lg-2 p-2">
+        <div class="col-lg-1 p-2">
           <p>{{item.transport.name}} {{item.transport.model}}</p>
         </div>
         <div class="col-lg-3 p-2">
           <p>{{item.transport.routeMap.fullAddressFrom}} {{str}} {{item.transport.routeMap.fullAddressTo}}</p>
         </div>
-        <div class="col-lg-3 p-2">
+        <div class="col-lg-5 ">
           <div v-for="orderData in item.orderDats">
             <div v-for="cargo in orderData.cargoes" class="row">
-              <p class="col-lg-6 mb-0" >{{cargo.name}}</p>
-              <div class="col-lg-6">
-                <button class="infoButton" @click="ShowInfo(cargo)"
-                        data-toggle="tooltip" data-placement="top" title="Информация">&#128712;</button>
+              <div class="col-lg-4" > <p class="m-0 p-0">{{cargo.name}}</p></div>
+              <div class="col-lg-1">
+                <button class="infoButton" @click="ShowInfo(cargo)">&#128712;</button>
+              </div>
+              <div class="col-lg-7">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <p class="m-0 p-0">{{ cargo.costDelivery==0?"Договорная":cargo.costDelivery}}</p>
+                  </div>
+                  <div class="col-lg-2">
+                    <p class="m-0 p-0">{{ cargo.typeCurrency.name}}</p>
+                  </div>
+                  <div class="col-lg-4">
+                    <p class="m-0 p-0">{{ cargo.typePayment.name}}</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="border-bottom" style="width: 50%"></div>
-          </div>
+           </div>
         </div>
-        <div class="col-lg-1 text-sm-center justify-content-center" style="width: auto; margin: auto -10px;">
+
+        <div class="col-lg-1 text-sm-center justify-content-center" v-show="!item.orderDats[0].status">
           <button class="deleteButton" @click="DeleteItem"
                   data-toggle="tooltip" data-placement="top" title="Отказаться">&#10006;</button>
+          <button class="acceptButton" @click="DoneItem"
+                  data-toggle="tooltip" data-placement="top" title="Отметить успешное выполнение">&#10004;</button>
+        </div>
+        <div class="" style="color: green; font-size: 15px; width: auto; margin: auto -10px;" v-show="item.orderDats[0].status">
+          Вы доставили груз!
         </div>
       </div>
     </div>
 
-
   </div>
-
 
   </template>
 <script>
@@ -98,7 +112,6 @@ export default {
       infoModel:{},
       dateStart:Date,
       dateEnd:Date,
-
     }
   },
   components:{
@@ -125,6 +138,9 @@ export default {
     },
     DeleteItem() {
       this.$emit('delete-item',this.item);
+    },
+    DoneItem() {
+      this.$emit('done-item',this.item);
     }
 
   }
@@ -133,6 +149,14 @@ export default {
 
 <style scoped>
 
+.done{
+  background-color: #40b538; width: 10px;
+  border-radius: 10px 0px 0px 10px;
+}
+.inProgress{
+  background-color: #007bff; width: 10px;
+  border-radius: 10px 0px 0px 10px;
+}
 .boxShadow {
   margin: 1em auto;
   box-shadow: 0 2px 15px rgba(0, 0, 0, .2);
@@ -157,10 +181,22 @@ export default {
   font-size: 20px;
   border-radius: 30%;
   border: none;
-  background: white;
+  background: none;
 
 }
 .deleteButton:hover{
+  font-size: 20px;
+  border-radius: 30%;
+  box-shadow: 0 0px 5px rgba(0, 0, 0, .4);
+}
+.acceptButton{
+  color: green;
+  font-size: 20px;
+  border-radius: 30%;
+  border: none;
+  background: none;
+}
+.acceptButton:hover{
   font-size: 20px;
   border-radius: 30%;
   box-shadow: 0 0px 5px rgba(0, 0, 0, .4);

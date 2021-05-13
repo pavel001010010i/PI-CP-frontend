@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import List from "@/components/Tables/Request/ORData/List"
+import List from "@/components/Tables/Order/ORData/List"
 import store from "@/store.index"
 import ROService from "@/Services/RequestAndOrderServices/Request-Order-Service"
 export default {
@@ -28,21 +28,21 @@ name: "OutgoingRequestsIndex",
   },
 
   mounted() {
-    this.GetRequests();
+    this.GetOrders();
   },
 
   methods:{
     DeleteItem(data){
       ROService.methods.DeleteRequestCustomer(data);
     },
-    GetRequests() {
-      ROService.methods.GetRequestCustomer();
+    GetOrders() {
+      ROService.methods.GetOrderCustomer();
     }
   },
 
   computed:{
     items(){
-      return store.getters.GetRCustomer;
+      return store.getters.GetOCustomer;
     },
     isVisible(){
       return !store.getters.isVisible;

@@ -3,14 +3,14 @@
     <ItemList  v-for="item in items"
                :item="item"
                @delete-item = "DeleteItem"
-               @accept-item = "AcceptItem"
-          />
+               @done-item ="DoneItem"
+    />
   </div>
 
 </template>
 
 <script>
-import ItemList from "@/components/Tables/Request/IRData/ItemList";
+import ItemList from "@/components/Tables/Order/IRData/ItemList";
 export default {
 name: "List",
   props:['items'],
@@ -22,9 +22,10 @@ name: "List",
     DeleteItem(data){
       this.$emit('delete-item',data);
     },
-    AcceptItem(data){
-      this.$emit('accept-item',data);
+    DoneItem(data){
+      this.$emit('done-item',data);
     }
+
   }
 }
 </script>

@@ -44,6 +44,23 @@ const routes = [
     ]
   },
   {
+    path: '/orders',
+    name: 'OrderIndex',
+    component: () => import( '@/components/Tables/Order/OrderIndex'),
+    children:[
+      {
+        path: '/outgoing-orders',
+        name: 'OutgoingOrderIndex',
+        component: () => import( '@/components/Tables/Order/OutgoingOrdersIndex')
+      },
+      {
+        path: '/incoming-orders',
+        name: 'IncomingOrderIndex',
+        component: () => import( '@/components/Tables/Order/IncomingOrdersIndex')
+      }
+    ]
+  },
+  {
     path: '/app-manage',
     name: 'AppManageService',
     component: () => import( '../Services/AppManageServices/AppManageService')

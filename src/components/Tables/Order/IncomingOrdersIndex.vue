@@ -3,7 +3,7 @@
     <h3 class="mb-3 mt-3 text-left">Входящие заявки</h3>
     <List :items="items"
           @delete-item = "DeleteItem"
-          @accept-item = "AcceptItem"
+          @done-item ="DoneItem"
     />
     <div>
       <div v-if="items.length==0">
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import List from "@/components/Tables/Request/IRData/List"
+import List from "@/components/Tables/Order/IRData/List"
 import store from "@/store.index"
 import ROService from "@/Services/RequestAndOrderServices/Request-Order-Service"
 export default {
@@ -32,24 +32,24 @@ name: "IncomingRequestsIndex",
   },
 
   mounted() {
-    this.GetRequests();
+    this.GetOrders();
   },
 
   methods:{
     DeleteItem(data){
       ROService.methods.DeleteRequestProvider(data);
     },
-    AcceptItem(data){
-      ROService.methods.AcceptItemRequest(data);
+    GetOrders() {
+      ROService.methods.GetOrderProvider();
     },
-    GetRequests() {
-      ROService.methods.GetRequestProvider();
+    DoneItem(data){
+      ROService.methods.DoneItemOrder(data);
     }
   },
 
   computed:{
     items(){
-      return store.getters.GetRProvider;
+      return store.getters.GetOProvider;
     },
     isVisible(){
       return !store.getters.isVisible;

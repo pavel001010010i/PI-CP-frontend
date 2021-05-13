@@ -19,11 +19,44 @@ name: "Request-Order-Service",
       console.log(error);
     });
   },
-    DeleteRequest(data){
+    DeleteRequestCustomer(data){
       const { setNotification } = useNotificationStore()
-      axios.post(Constants.data().url+"api/RequestOrder/delete-item",data,Constants.data().configBearHeader).then(response => {
+      axios.post(Constants.data().url+"api/RequestOrder/delete-item-request-cust",data,Constants.data().configBearHeader).then(response => {
         setNotification(Constants.methods.GetNotification(response.data.message,"info"));
         store.dispatch('GetRCustomer');
+        console.log(response.data);
+      }).catch((error) => {
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
+    DeleteRequestProvider(data){
+      const { setNotification } = useNotificationStore()
+      axios.post(Constants.data().url+"api/RequestOrder/delete-item-request-prov",data,Constants.data().configBearHeader).then(response => {
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        store.dispatch('GetRProvider');
+        console.log(response.data);
+      }).catch((error) => {
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
+    AcceptItemRequest(data){
+      const { setNotification } = useNotificationStore()
+      axios.post(Constants.data().url+"api/RequestOrder/accept-item-request",data,Constants.data().configBearHeader).then(response => {
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        store.dispatch('GetRProvider');
+        console.log(response.data);
+      }).catch((error) => {
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
+    DoneItemOrder(data){
+      const { setNotification } = useNotificationStore()
+      axios.post(Constants.data().url+"api/RequestOrder/done-item-order",data,Constants.data().configBearHeader).then(response => {
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        store.dispatch('GetOProvider');
         console.log(response.data);
       }).catch((error) => {
         setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
@@ -35,6 +68,12 @@ name: "Request-Order-Service",
     },
     GetRequestProvider(){
       store.dispatch('GetRProvider');
+    },
+    GetOrderCustomer(){
+      store.dispatch('GetOCustomer');
+    },
+    GetOrderProvider(){
+      store.dispatch('GetOProvider');
     }
   }
 }
