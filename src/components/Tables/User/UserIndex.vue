@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-2 ">
+  <div class="pb-2 " v-if="isHidden">
     <h1 class=" text-left">Пользователи</h1>
     <v-popup v-if="isPopupeVisible"
              @ClosePopup="ClosePopup"
@@ -119,12 +119,16 @@ export default {
   },
   mounted() {
     this.GetUsers();
+    store.dispatch('IsAdmin')
   },
 
   computed:{
     users(){
       return store.getters.GetUsers;
-    }
+    },
+    isHidden (){
+      return store.getters.getIsAdmin;
+    },
   },
   methods:{
     ShowInfo(data){
