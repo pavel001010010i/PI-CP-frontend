@@ -24,12 +24,12 @@
         <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}} </p>
         <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
       </div>
-      <div class=" col-md-3 border-right">
+      <div class=" col-md-2 border-right">
         <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
         <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
         <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
       </div>
-      <div class=" col-md-2">
+      <div class=" col-md-3">
         <p class="card-text mb-0 font-weight-bold">Контакты</p>
         <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
         <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>

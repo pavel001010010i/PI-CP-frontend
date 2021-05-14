@@ -14,25 +14,30 @@
         <p class="card-text mb-0"><b>Стоимость:</b> {{item.costDelivery===0?"договорная":item.costDelivery}} {{item.costDelivery===0?"":currencyName}}</p>
         <p class="card-text mb-0"><b>Способ оплаты:</b> {{paymentName}}</p>
       </div>
-      <div class=" col-md-2 border-right ">
-        <p class="mb-0 font-weight-bold">Тип груза</p>
-        <li class="card-text mb-0" style="width: 160px" v-for="cargoType in item.typeCargo">{{cargoType.name}}</li>
+      <div class=" col-md-10">
+        <div class="row">
+          <div class="col-lg-2 border-right">
+            <p class="mb-0 font-weight-bold">Тип груза</p>
+            <li class="card-text mb-0" style="width: 160px" v-for="cargoType in item.typeCargo">{{cargoType.name}}</li>
+          </div>
+          <div class="col-lg-5 border-right">
+            <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}}</p>
+            <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
+          </div>
+          <div class="col-lg-2 border-right">
+            <p class="card-text mb-0 font-weight-bold">Дата перевозки</p>
+            <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
+            <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
+          </div>
+          <div class="col-lg-3">
+            <p class="card-text mb-0 font-weight-bold">Контакты</p>
+            <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
+            <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
+            <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
+          </div>
+        </div>
       </div>
-      <div class=" col-md-4 border-right">
-        <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}}</p>
-        <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
-      </div>
-      <div class=" col-md-2 border-right">
-        <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
-        <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
-        <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
-      </div>
-      <div class=" col-md-2">
-        <p class="card-text mb-0 font-weight-bold">Контакты</p>
-        <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
-        <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
-        <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
-      </div>
+
 
 
     </div>

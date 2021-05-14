@@ -37,7 +37,7 @@ name: "IncomingRequestsIndex",
 
   methods:{
     DeleteItem(data){
-      ROService.methods.DeleteRequestProvider(data);
+      ROService.methods.DeleteOrderProvider(data);
     },
     GetOrders() {
       ROService.methods.GetOrderProvider();

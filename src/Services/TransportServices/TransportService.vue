@@ -51,11 +51,10 @@ name: "TransportService",
       store.dispatch('GetTransports');
     },
     Delete(data){
+      const { setNotification } = useNotificationStore()
       axios.delete(Constants.data().url+ `api/transport/delete-transport/${data}`,Constants.data().configBearHeader)
           .then(response => {
-            console.log(response.status)
-            const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("Транспорт успешно удален!","success"));
+            setNotification(Constants.methods.GetNotification(response.data.message,"success"));
             store.dispatch('GetTransports');
             console.log(response.status)
           })

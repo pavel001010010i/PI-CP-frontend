@@ -180,8 +180,8 @@ name: "CustomerIndex",
       idTypeCargoes: [],
       AllTypeCargo:[],
       selectTypeCargo:[],
-      selectedDateStart: new Date().toLocaleString('en-US', { timeZone: "Europe/Minsk" }),
-      selectedDateEnd: new Date().toLocaleString('en-US', { timeZone: "Europe/Minsk" }),
+      selectedDateStart: new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })),
+      selectedDateEnd: new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })),
     }
   },
   components:{

@@ -33,7 +33,7 @@ name: "OutgoingRequestsIndex",
 
   methods:{
     DeleteItem(data){
-      ROService.methods.DeleteRequestCustomer(data);
+      ROService.methods.DeleteOrderCustomer(data);
     },
     GetOrders() {
       ROService.methods.GetOrderCustomer();

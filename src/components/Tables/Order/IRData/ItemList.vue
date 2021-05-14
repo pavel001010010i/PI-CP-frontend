@@ -61,7 +61,8 @@
             <div v-for="cargo in orderData.cargoes" class="row">
               <div class="col-lg-4" > <p class="m-0 p-0">{{cargo.name}}</p></div>
               <div class="col-lg-1">
-                <button class="infoButton" @click="ShowInfo(cargo)">&#128712;</button>
+                <button class="infoButton" @click="ShowInfo(cargo)"
+                        data-toggle="tooltip" data-placement="top" title="Информация о грузе">&#128712;</button>
               </div>
               <div class="col-lg-7">
                 <div class="row">
@@ -80,7 +81,7 @@
            </div>
         </div>
 
-        <div class="col-lg-1 text-sm-center justify-content-center" v-show="!item.orderDats[0].status">
+        <div style="color: green; font-size: 15px; width: auto; margin: auto 10px;" v-show="!item.orderDats[0].status">
           <button class="deleteButton" @click="DeleteItem"
                   data-toggle="tooltip" data-placement="top" title="Отказаться">&#10006;</button>
           <button class="acceptButton" @click="DoneItem"
@@ -99,7 +100,6 @@
 
 import vPopup from "@/Services/Popup/popup-RO-info"
 import moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022'
-
 
 export default {
   name: "ItemList",

@@ -230,8 +230,8 @@ name: "TransportIndex",
     UpdatePopup(){
       this.transportModel.idUser=MainVariables.data().userId;
       this.routeModel.transport = this.transportModel;
-      this.routeModel.endDate = new Date(this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
-      this.routeModel.startDate = new Date(this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
+      this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
+      this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
 
       TransportService.methods.Update(this.routeModel);
       this.GetTransports();

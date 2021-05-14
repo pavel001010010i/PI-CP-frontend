@@ -14,13 +14,13 @@
     <div class="card-body row">
       <div class="col-md-2 border-right">
         <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
-        <p class="card-text mb-0"><b>Активный:</b> {{item.isActive}}</p>
+        <p class="card-text mb-0"><b>Активный:</b> {{item.isActive?"Активный":"Не активный"}}</p>
         <p class="card-text mb-0"><b>Расход топлива:</b> <br/>{{item.fuelConsumption}} л/100км</p>
       </div>
       <div class=" col-md-2 border-right">
-        <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{transportLoadCapacityName}}</p>
+        <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{`${item.transportLoadCapacity.name} (${item.transportLoadCapacity.minValue}-${item.transportLoadCapacity.maxValue}) кг`}}</p>
         <p class="card-text mb-0"><b>Грузоподъемность:</b> {{item.maxLoadCapacity}} кг</p>
-        <p class="mb-0 "><b>Тип транспорта:</b> {{typeTransportName}}</p>
+        <p class="mb-0 "><b>Тип транспорта:</b> {{item.typeTransport.name}}</p>
 
       </div>
       <div class=" col-md-5 border-right">
@@ -60,12 +60,8 @@ export default {
   },
   updated() {
     this.GetRouteMap();
-    this.GetNameTransport();
-    this.GetNameTransportLoadCapacity();
   },
   mounted() {
-    this.GetNameTransport();
-    this.GetNameTransportLoadCapacity();
     this.GetRouteMap();
   },
   methods:{
@@ -93,22 +89,6 @@ export default {
             this.dateStart = moment(response.data.startDate).format('DD-MMMM-YYYY')
             this.dateEnd = moment(response.data.endDate).format('DD-MMMM-YYYY')
 
-          }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetNameTransport(){
-      TypeService.methods.getTypeTransportId(this.item.idTypeTransport)
-      .then(response => {
-        this.typeTransportName = response.data.name;
-      }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetNameTransportLoadCapacity(){
-      TypeService.methods.GetTransportLoadCapacityId(this.item.idTransLoadCapacity)
-          .then(response => {
-            this.transportLoadCapacityName =  `${response.data.name} (${response.data.minValue}-${response.data.maxValue}) кг`;
           }).catch((error) => {
         console.log(error);
       });

@@ -41,6 +41,28 @@ name: "Request-Order-Service",
         console.log(error);
       });
     },
+    DeleteOrderCustomer(data){
+      const { setNotification } = useNotificationStore()
+      axios.post(Constants.data().url+"api/RequestOrder/delete-item-order-cust",data,Constants.data().configBearHeader).then(response => {
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        store.dispatch('GetOCustomer');
+        console.log(response.data);
+      }).catch((error) => {
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
+    DeleteOrderProvider(data){
+      const { setNotification } = useNotificationStore()
+      axios.post(Constants.data().url+"api/RequestOrder/delete-item-order-prov",data,Constants.data().configBearHeader).then(response => {
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        store.dispatch('GetOProvider');
+        console.log(response.data);
+      }).catch((error) => {
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
     AcceptItemRequest(data){
       const { setNotification } = useNotificationStore()
       axios.post(Constants.data().url+"api/RequestOrder/accept-item-request",data,Constants.data().configBearHeader).then(response => {
