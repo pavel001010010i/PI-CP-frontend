@@ -6,11 +6,12 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav">
-          <router-link class="nav-link text-dark" to="/transports" >Транспорт</router-link>
-          <router-link class="nav-link text-dark" to="/cargoes" >Грузы</router-link>
-          <router-link class="nav-link text-dark" to="/requests" >Заявки</router-link>
-          <router-link class="nav-link text-dark" to="/orders" >Заказы</router-link>
+        <div class="navbar-nav mt-3 mb-3 " style="font-size: large">
+          <router-link class="nav-link text-dark border-right" to="/transports" >Транспорт</router-link>
+          <router-link class="nav-link text-dark border-right" to="/cargoes" >Грузы</router-link>
+          <router-link class="nav-link text-dark border-right" to="/requests" >Заявки</router-link>
+          <router-link class="nav-link text-dark border-right" to="/orders" >Заказы</router-link>
+          <router-link class="nav-link text-dark" to="/here-service" >Расчет маршрута</router-link>
         </div>
       </div>
     </div>

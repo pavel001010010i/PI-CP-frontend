@@ -68,6 +68,7 @@ name: "Login",
           this.$store.dispatch('IsUser');
           this.isVisible =MainVariables.data().isVisibleButLogInOut;
           this.responseToken =JwtTokenService.methods.getDecodeJwToken(response.data)
+          this.$router.push({ name: 'Home' });
         }
         else {
           this.isLockout = true;

@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isVisible">
+  <div v-if="isHidden">
     <h3 class="text-left mb-3">Настройка видимости значений.</h3>
     <div class="form-row pb-3">
       <div class="col-lg-3">
@@ -72,8 +72,6 @@ name: "AppManageService",
       srcButPayment:this.isHiddenFormPayment?"arrowUp.png":"arrowDown.png",
       srcButCurrency:this.isHiddenFormCurrency?"arrowUp.png":"arrowDown.png",
 
-      isVisible:Boolean,
-
       typeCargo:[],
       typeTransport:[],
       typeCurrency:[],
@@ -81,6 +79,7 @@ name: "AppManageService",
     }
   },
   mounted() {
+    store.dispatch('IsAdmin')
     this.GetTypeCargo();
     TypeService.methods.GetTypeTransportsAll();
     TypeService.methods.GetTypeCurrenciesAll();
@@ -88,6 +87,7 @@ name: "AppManageService",
   },
   methods:{
     GetTypeCargo(){
+      console.log(this.isHidden);
       TypeService.methods.GetTypeCargoesAllA();
     },
     HiddenFormTrans(){
@@ -132,8 +132,8 @@ name: "AppManageService",
     }
   },
   computed:{
-    isVisible(){
-      return store.getters.isVisible;
+    isHidden (){
+      return store.getters.getIsAdmin;
     },
     typePayment(){
       return store.getters.GetTypePaymentsAdmin;

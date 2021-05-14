@@ -58,6 +58,7 @@ name: "TypeCargoService",
       store.dispatch('GetTypeCurrencies');
     },
     GetTypeTransportsAll(){
+
       store.dispatch('GetTypeTransportsAll');
     },
     GetTypeCargoesAll(){

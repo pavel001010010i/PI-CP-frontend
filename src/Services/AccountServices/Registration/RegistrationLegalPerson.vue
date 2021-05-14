@@ -112,11 +112,8 @@ name: "RegistrationProvider",
     }
   },
   methods:{
-
     RegistrationUser(){
-
       AccountService.methods.RegisterUser(this.model).then(response=>{
-        //console.log(response);
         const { setNotification } = useNotificationStore()
         setNotification(Constants.methods.GetNotification("Ваша учетная запись успешно создана!","success"));
         setTimeout(()=>this.$router.push({ name: 'Login' }), 3000);

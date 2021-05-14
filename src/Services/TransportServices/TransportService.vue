@@ -54,7 +54,7 @@ name: "TransportService",
       const { setNotification } = useNotificationStore()
       axios.delete(Constants.data().url+ `api/transport/delete-transport/${data}`,Constants.data().configBearHeader)
           .then(response => {
-            setNotification(Constants.methods.GetNotification(response.data.message,"success"));
+            setNotification(Constants.methods.GetNotification("Транспорт удален","success"));
             store.dispatch('GetTransports');
             console.log(response.status)
           })
