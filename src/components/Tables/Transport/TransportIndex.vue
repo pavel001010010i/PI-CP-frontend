@@ -93,14 +93,16 @@
         </div>
         <div class="col-md-auto mb-3">
           <label>С</label>
-            <datepicker
-              v-model="selectedDateStart"
-              :lowerLimit = "new Date()"
+            <datepicker class="form-control"
+                :locale="ru"
+                v-model="selectedDateStart"
+                :lowerLimit = "new Date()"
           />
         </div>
         <div class="col-md-auto mb-3">
           <label>По</label>
-            <datepicker
+            <datepicker class="form-control"
+                :locale="ru"
                 v-model="selectedDateEnd"
                 :lowerLimit = "new Date()"
               />
@@ -145,12 +147,14 @@ import HereAddressLookup from "@/Services/HereAPi/HereAddressLookup";
 import RouteModel from "@/Models/RouteModel"
 
 import TypeTransportModel from "@/Models/TypeTransportModel"
+import { ru } from 'date-fns/locale'
+
 
 export default {
 name: "TransportIndex",
   data() {
     return {
-
+      ru:ru,
       isPopupeVisible:false,
       getCargo: {},
       isDisableEmailField:false,
@@ -226,8 +230,8 @@ name: "TransportIndex",
     UpdatePopup(){
       this.transportModel.idUser=MainVariables.data().userId;
       this.routeModel.transport = this.transportModel;
-      this.routeModel.endDate = new Date(this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
-      this.routeModel.startDate = new Date(this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" }));
+      this.routeModel.endDate = this.selectedDateEnd.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
+      this.routeModel.startDate = this.selectedDateStart.toLocaleString('en-US', { timeZone: "Europe/Minsk" });
 
       TransportService.methods.Update(this.routeModel);
       this.GetTransports();

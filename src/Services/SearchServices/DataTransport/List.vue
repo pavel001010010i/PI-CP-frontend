@@ -2,7 +2,7 @@
   <div class="pb-1">
     <ItemList  v-for="item in items"
                :item="item"
-               @edit-item="EditItem"/>
+               @request-item="RequestItem"/>
   </div>
 
 </template>
@@ -19,8 +19,8 @@ name: "List",
     TypeService
   },
   methods:{
-    EditItem(data){
-      this.$emit('edit-item',data);
+    RequestItem(data){
+      this.$emit('request-item',data);
     }
   }
 }

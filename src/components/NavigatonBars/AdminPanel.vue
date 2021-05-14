@@ -9,6 +9,8 @@
         <div class="navbar-nav">
           <router-link class="nav-link text-dark" to="/transports" >Транспорт</router-link>
           <router-link class="nav-link text-dark" to="/cargoes" >Грузы</router-link>
+          <router-link class="nav-link text-dark" to="/requests" >Заявки</router-link>
+          <router-link class="nav-link text-dark" to="/orders" >Заказы</router-link>
           <router-link class="nav-link text-dark" to="/here-service" >Расчет маршрута</router-link>
           <router-link class="nav-link text-dark" to="/users" >Пользователи</router-link>
           <router-link class="nav-link text-dark" to="/app-manage" >Настройка сайта</router-link>

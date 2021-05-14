@@ -11,13 +11,13 @@ name: "TransportService",
       axios.put(Constants.data().url+"api/transport/update-transport",data,Constants.data().configBearHeader)
           .then(response => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The transport was updated successfully","success"));
+            setNotification(Constants.methods.GetNotification("Ваш транспорт успешно обновлен!","info"));
             store.dispatch('GetTransports');
 
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("Error. Transport not updated","alert"));
+            setNotification(Constants.methods.GetNotification("Ошибка. Не возможно обновить транспорт!","alert"));
             console.log(error);
           });
     },
@@ -25,7 +25,7 @@ name: "TransportService",
       axios.post(Constants.data().url+"api/transport/add-transport",data,Constants.data().configBearHeader)
           .then(response => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The transport was added successfully","success"));
+            setNotification(Constants.methods.GetNotification("Транспорт успешно добавлен!","success"));
             store.dispatch('GetTransports');
 
             console.log(response.data);
@@ -42,7 +42,7 @@ name: "TransportService",
 
               }
             }else {
-              setNotification(Constants.methods.GetNotification(`Error. Transport not added`,"alert"));
+              setNotification(Constants.methods.GetNotification(`Ошибка. Транспорт не удалось добавить!`,"alert"));
             }
             console.log(error.response);
           });
@@ -51,17 +51,16 @@ name: "TransportService",
       store.dispatch('GetTransports');
     },
     Delete(data){
+      const { setNotification } = useNotificationStore()
       axios.delete(Constants.data().url+ `api/transport/delete-transport/${data}`,Constants.data().configBearHeader)
           .then(response => {
-            console.log(response.status)
-            const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("The transport was deleted successfully","success"));
+            setNotification(Constants.methods.GetNotification(response.data.message,"success"));
             store.dispatch('GetTransports');
             console.log(response.status)
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification("Error. Transport not deleted","alert"));
+            setNotification(Constants.methods.GetNotification("Ошибка. Транспорт не удален!","alert"));
             console.log(error);
           });
     }

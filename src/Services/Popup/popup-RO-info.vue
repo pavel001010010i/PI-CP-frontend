@@ -13,8 +13,6 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline-danger" @click="ClosePopup">{{ leftBtnTitle }}</button>
-        <button v-show="isState" class="btn btn-outline-primary" @click="AddPopup">{{ rightBtnTitleAdd }}</button>
-        <button v-show="!isState" class="btn btn-outline-primary" @click="UpdatePopup">{{ rightBtnTitleUpdate }}</button>
       </div>
     </div>
   </div>
@@ -33,14 +31,6 @@ name: "modal-popup",
       type: Boolean,
       default: true
     },
-  rightBtnTitleAdd:{
-    type: String,
-    default:"OK"
-  },
-    rightBtnTitleUpdate:{
-      type: String,
-      default:"Update"
-    },
     leftBtnTitle:{
       type: String,
       default:"Close"
@@ -49,12 +39,6 @@ name: "modal-popup",
   methods:{
     ClosePopup(){
       this.$emit('ClosePopup')
-    },
-    AddPopup(){
-      this.$emit('AddPopup')
-    },
-    UpdatePopup(){
-      this.$emit('UpdatePopup')
     }
   },
   mounted() {
@@ -89,7 +73,6 @@ name: "modal-popup",
   background: #ffffff;
   box-shadow: 0px 0px 15px 0 rgba(0, 0, 0, .4);
   z-index: 10;
-  min-height: 70%;
 }
 
 .v-popup__header, .v-popup__footer {

@@ -18,6 +18,14 @@ name: "TransportModel",
         maxLoadCapacity:Number,
         fuelConsumption:Number,
         isActive:Boolean,
+      },
+      requestModel:{
+        item: {},
+        routeModel: {},
+        transportLoadCapacityName: "",
+        typeTransportName: "",
+        dateStart :"",
+        dateEnd :""
       }
     }
   }

@@ -27,6 +27,40 @@ const routes = [
     ]
   },
   {
+    path: '/requests',
+    name: 'RequestIndex',
+    component: () => import( '@/components/Tables/Request/RequestIndex'),
+    children:[
+      {
+        path: '/outgoing-requests',
+        name: 'OutgoingRequestIndex',
+        component: () => import( '@/components/Tables/Request/OutgoingRequestsIndex')
+      },
+      {
+        path: '/incoming-requests',
+        name: 'IncomingRequestIndex',
+        component: () => import( '@/components/Tables/Request/IncomingRequestsIndex')
+      }
+    ]
+  },
+  {
+    path: '/orders',
+    name: 'OrderIndex',
+    component: () => import( '@/components/Tables/Order/OrderIndex'),
+    children:[
+      {
+        path: '/outgoing-orders',
+        name: 'OutgoingOrderIndex',
+        component: () => import( '@/components/Tables/Order/OutgoingOrdersIndex')
+      },
+      {
+        path: '/incoming-orders',
+        name: 'IncomingOrderIndex',
+        component: () => import( '@/components/Tables/Order/IncomingOrdersIndex')
+      }
+    ]
+  },
+  {
     path: '/app-manage',
     name: 'AppManageService',
     component: () => import( '../Services/AppManageServices/AppManageService')

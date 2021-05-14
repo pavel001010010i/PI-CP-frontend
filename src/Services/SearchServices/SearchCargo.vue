@@ -99,6 +99,7 @@
         <div class="mb-2">
           <label>С</label>
           <datepicker class="form-control"
+                      :locale="ru"
                       v-model="selectedDateStart"
                       :lowerLimit = "new Date()"
           />
@@ -106,6 +107,7 @@
         <div class="mb-2">
           <label>По</label>
           <datepicker class="form-control"
+                      :locale="ru"
                       v-model="selectedDateEnd"
                       :lowerLimit = "new Date()"
           />
@@ -159,6 +161,7 @@ import SearchModel from "@/Models/SearchModel"
 import TransportService from "@/Services/TransportServices/TransportService"
 import List from "@/Services/SearchServices/DataCargo/List";
 import SearchService from "@/Services/SearchServices/SearchService"
+import { ru } from 'date-fns/locale'
 
 export default {
   name: "SearchCargo",
@@ -173,6 +176,7 @@ export default {
   },
   data(){
     return{
+      ru:ru,
       isHiddenForm:Boolean,
       searchModel: SearchModel.data().model,
       srcBut:this.isHiddenForm?"arrowUp.png":"arrowDown.png",

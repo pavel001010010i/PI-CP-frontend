@@ -77,7 +77,6 @@ name: "user-popup",
   right: 0;
   left: 0;
   top:0;
-  bottom: -9%;
   z-index: 9;
 }
 .v-popup{
@@ -87,7 +86,7 @@ name: "user-popup",
   top:5%;
   width:40%;
   background: #ffffff;
-  box-shadow: 5px 5px 5px 0 #506477;
+  box-shadow: 0px 0px 10px 0 #506477;
   z-index: 10;
 }
 

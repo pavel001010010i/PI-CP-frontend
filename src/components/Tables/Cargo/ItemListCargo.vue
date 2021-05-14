@@ -15,9 +15,9 @@
       <div class="col-md-2 border-right">
         <p class="card-text mb-0"><b>ВxШxД:</b> {{cargo.height}}x{{cargo.width}}x{{cargo.depth}}</p>
         <p class="card-text mb-0"><b>Вес:</b> {{cargo.weight}} кг</p>
-        <p class="card-text mb-0"><b>Активный:</b> {{cargo.isStatus}}</p>
-        <p class="card-text mb-0"><b>Стоимость:</b> {{cargo.costDelivery===0?"договорная":cargo.costDelivery}} {{cargo.costDelivery===0?"":currencyName}}</p>
-        <p class="card-text mb-0"><b>Способ оплаты:</b> {{paymentName}}</p>
+        <p class="card-text mb-0"><b>Активный:</b> {{cargo.isStatus?"Активный":"Не активный"}}</p>
+        <p class="card-text mb-0"><b>Стоимость:</b> {{cargo.costDelivery===0?"договорная":cargo.costDelivery}} {{cargo.costDelivery===0?"":cargo.typeCurrency.name}}</p>
+        <p class="card-text mb-0"><b>Способ оплаты:</b> {{cargo.typePayment.name}}</p>
       </div>
       <div class=" col-md-2 border-right ">
         <p class="mb-0 font-weight-bold">Тип груза</p>
@@ -62,12 +62,8 @@ export default {
   },
   updated() {
     this.GetRouteMap();
-    this.GetNamePayment();
-    this.GetNameCurrency();
   },
   mounted() {
-    this.GetNamePayment();
-    this.GetNameCurrency();
     this.GetRouteMap();
   },
   methods:{
@@ -98,28 +94,6 @@ export default {
           }).catch((error) => {
         console.log(error);
       });
-    },
-    GetNamePayment(){
-      TypeService.methods.getTypePaymentId(this.cargo.idTypePayment)
-      .then(response => {
-        this.paymentName = response.data.name;
-      }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetNameCurrency(){
-      TypeService.methods.getTypeCurrencyId(this.cargo.idTypeCurrency)
-          .then(response => {
-            this.currencyName = response.data.name;
-          }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetTypePayments(){
-      TypeService.methods.GetTypePayments();
-    },
-    GetTypeCurrencies(){
-      TypeService.methods.GetTypeCurrencies();
     },
     edit_cargo:function () {
       this.$emit('edit-cargo',

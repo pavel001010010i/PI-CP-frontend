@@ -103,7 +103,7 @@ name: "RegistrationProvider",
       AccountService.methods.RegisterUser(this.model).then(response=>{
         console.log(response);
         const { setNotification } = useNotificationStore()
-        setNotification(Constants.methods.GetNotification("The user was registered successfully","success"));
+        setNotification(Constants.methods.GetNotification("Ваша учетная запись успешно создана!","success"));
         setTimeout(()=>this.$router.push({ name: 'Login' }), 3000);
 
       }).catch(error=>{
@@ -117,7 +117,7 @@ name: "RegistrationProvider",
         }
         if(error.response.data.PasswordConfirm){
           const { setNotification } = useNotificationStore()
-          setNotification(Constants.methods.GetNotification(error.response.data.PasswordConfirm[1],"alert"));
+          setNotification(Constants.methods.GetNotification(error.response.data.PasswordConfirm[0],"alert"));
         }
         if(error.response.data.NameOrganization){
           const { setNotification } = useNotificationStore()
