@@ -7,7 +7,7 @@
       <h2 class="text-center">Поиск транспорта</h2>
       <div>
         <button  class="btn btn-outline-primary mb-1" @click="HiddenForm">
-          <img :src="require(`@/assets/${srcBut}`)" />
+          <img :src="require(`@/Assets/${srcBut}`)" />
           Фильтр
         </button>
         <button class="btn btn-outline-info ml-1 mb-1" @click="Search">Найти</button>
@@ -26,31 +26,35 @@
           <div class="card text-left mb-3 small boxShadow">
             <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
               <div class="row">
-                <h5 class="border-white border rounded p-1 mr-3">{{reqTranModel.routeModel.countryCodeFrom}}-{{reqTranModel.routeModel.countryCodeTo}}</h5>
-                <h5 class="p-1">{{reqTranModel.item.name}}</h5>
+                <h5 class="border-white border rounded p-1 mr-3">{{item.routeMap.countryCodeFrom}}-{{item.routeMap.countryCodeTo}}</h5>
+                <h5 class="p-1" >{{item.name}}</h5>
               </div>
             </div>
             <div class="card-body row">
-              <div class="col-lg-3 border-right">
-                <p class="card-text mb-0"><b>ВxШxД:</b> {{reqTranModel.item.height}}x{{reqTranModel.item.width}}x{{reqTranModel.item.depth}}</p>
-                <p class="card-text mb-0"><b>Активный:</b> {{reqTranModel.item.isActive}}</p>
-                <p class="card-text mb-0"><b>Расход топлива:</b> {{reqTranModel.item.fuelConsumption}} л/100км</p>
+              <div class="col-md-2 border-right">
+                <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
+                <p class="card-text mb-0"><b>Расход топлива:</b> <br/>{{item.fuelConsumption}} л/100км</p>
+                <p class="mb-0 "><b>Тип транспорта:</b> {{item.typeTransport.name}}</p>
               </div>
-              <div class=" col-lg-3 border-right">
-                <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{reqTranModel.transportLoadCapacityName}}</p>
-                <p class="card-text mb-0"><b>Грузоподъемность:</b> {{reqTranModel.item.maxLoadCapacity}} кг</p>
-                <p class="mb-0 "><b>Тип транспорта:</b> {{reqTranModel.typeTransportName}}</p>
+              <div class=" col-md-2 border-right">
+                <p class="card-text mb-0"><b>Нагрузка на оси:</b> {{ `${item.transportLoadCapacity.name} (${item.transportLoadCapacity.minValue}-${item.transportLoadCapacity.maxValue}) кг`}}</p>
+                <p class="card-text mb-0"><b>Грузоподъемность:</b> {{item.maxLoadCapacity}} кг</p>
               </div>
-              <div class=" col-lg-3 border-right">
-                <p class="card-text mb-0"><b>От:</b> {{reqTranModel.routeModel.fullAddressFrom}} </p>
-                <p class="card-text mb-0"><b>До:</b> {{reqTranModel.routeModel.fullAddressTo}}</p>
+              <div class=" col-md-3 border-right">
+                <p class="card-text mb-0"><b>От:</b> {{item.routeMap.fullAddressFrom}} </p>
+                <p class="card-text mb-0"><b>До:</b> {{item.routeMap.fullAddressTo}}</p>
               </div>
-              <div class=" col-lg-3">
+              <div class=" col-md-2 border-right">
                 <p class="card-text mb-0 font-weight-bold">Дата транспортировки</p>
-                <p class="card-text mb-0"><b>С:</b> {{reqTranModel.dateStart}}</p>
-                <p class="card-text mb-0"><b>По</b> {{reqTranModel.dateEnd}}</p>
+                <p class="card-text mb-0"><b>С:</b> {{moment(item.routeMap.startDate).format('DD-MMMM-YYYY')}}</p>
+                <p class="card-text mb-0"><b>По</b> {{moment(item.routeMap.endDate).format('DD-MMMM-YYYY')}}</p>
               </div>
-            </div>
+              <div>
+                <p class="card-text mb-0 font-weight-bold">Контакты</p>
+                <p class="card-text mb-0"><b>Email:</b> {{item.appUser.email}}</p>
+                <p class="card-text mb-0"><b>Моб. номер</b> {{item.appUser.phoneNumber}}</p>
+                <p class="card-text mb-0"><b>Наименование</b> {{item.appUser.nameOrganization}}</p>
+              </div>
           </div>
         </div>
         <div class="col-lg-12">
@@ -66,6 +70,7 @@
             />
           </div>
         </div>
+      </div>
       </div>
 
     </v-popup>
@@ -205,7 +210,7 @@ import CargoService from "@/Services/CargoServices/CargoService"
 import Constants from "@/Services/Constants"
 import MainVariables from "@/Services/MainVariables"
 import ROService from "@/Services/RequestAndOrderServices/Request-Order-Service"
-
+import moment from 'moment-timezone/builds/moment-timezone-with-data-2012-2022'
 
 
 export default {
@@ -224,7 +229,7 @@ name: "SearchTransport",
   },
   data(){
     return{
-
+      moment:moment,
       isState:true,
       isPopupeVisible:false,
       ru:ru,
@@ -235,28 +240,29 @@ name: "SearchTransport",
       transports: [],
 
       reqTranModel: TransModel.data().requestModel,
-      requestModel: RequestModel.data().requestModel,
+      item: {},
       orderDataModel: RequestModel.data().orderDataModel,
+      requestModel: RequestModel.data().requestModel,
       cargoes:[],
       idCargoes:[],
       selectCargoes:[],
       cargoOptions:[],
-
       TypeTransportOptions:[],
       selectedDateStart:new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })) ,
       selectedDateEnd:new Date(Date.toLocaleString('en-US', { timeZone: "Europe/Minsk" })),
     }
   },
   mounted() {
-    this.GetCargoes();
+
     this.GetTransports();
     this.GetTypeTransports();
     this.GetTransportLoadCapacities();
   },
   methods:{
     RequestItem(data){
+      this.GetCargoes();
       this.isPopupeVisible = true,
-      this.reqTranModel = data;
+      this.item = data;
 
     },
     AddPopup(){
@@ -272,11 +278,11 @@ name: "SearchTransport",
       this.orderDataModel.status = false;
       this.orderDataModel.cargoes = this.selectCargoes;
 
-      this.requestModel.idTransport = this.reqTranModel.item.id;
-      this.requestModel.idUser = this.reqTranModel.item.idUser;
+      this.requestModel.idTransport = this.item.id;
+      this.requestModel.idUser = this.item.idUser;
       this.requestModel.status = false;
       this.requestModel.orderData = this.orderDataModel;
-      this.requestModel.name = "Заказ номер: "+(new Date().getSeconds())
+      this.requestModel.name = "Заказ номер: "+(new Date().getMilliseconds())
 
       ROService.methods.AddRequest(this.requestModel);
 
@@ -335,9 +341,6 @@ name: "SearchTransport",
     }
   },
   computed:{
-    /*cargoes(){
-      return store.getters.GetCargoes;
-    },*/
     isHiddenForm() {
       return this.$store.getters.GetVisibleFilterTrans;
     },

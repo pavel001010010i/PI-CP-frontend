@@ -87,7 +87,7 @@
 
     <div class="boxShadow small">
       <div class="row text-left">
-        <div class="ml-3" :class="{done:item.orderDats[0].status,inProgress: !item.orderDats[0].status}"></div>
+        <div class="ml-3 inProgress"></div>
         <div class="col-lg-3 p-2">
           <div class="row">
             <div class="col-lg-6">
@@ -174,7 +174,7 @@ export default {
     vPopup, vPopup1
   },
   updated() {
-
+    moment.locale('ru');
   },
   mounted() {
   },
@@ -185,7 +185,6 @@ export default {
     ShowInfo(data){
       this.infoModel = data;
 
-      moment.locale('ru');
       this.dateStart = moment(data.routeMap.startDate).format('DD-MMMM-YYYY')
       this.dateEnd = moment(data.routeMap.endDate).format('DD-MMMM-YYYY')
 
@@ -208,6 +207,10 @@ export default {
 
 <style scoped>
 
+.inProgress{
+  background-color: #007bff; width: 10px;
+  border-radius: 10px 0px 0px 10px;
+}
 .boxShadow {
   margin: 1em auto;
   box-shadow: 0 2px 15px rgba(0, 0, 0, .2);

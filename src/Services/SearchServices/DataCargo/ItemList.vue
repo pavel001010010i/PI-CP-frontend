@@ -2,7 +2,7 @@
   <div class="card text-left mb-3 boxShadow small">
     <div class="card-header pb-0 pt-1 v-popup__footer" style="background-color: dodgerblue; color: white">
       <div class="row">
-        <h5 class="border-white border rounded p-1 mr-3">{{routeModel.countryCodeFrom}}-{{routeModel.countryCodeTo}}</h5>
+        <h5 class="border-white border rounded p-1 mr-3">{{item.routeMap.countryCodeFrom}}-{{item.routeMap.countryCodeTo}}</h5>
         <h5 class="p-1">{{item.name}}</h5>
       </div>
 
@@ -11,8 +11,8 @@
       <div class="col-md-2 border-right">
         <p class="card-text mb-0"><b>ВxШxД:</b> {{item.height}}x{{item.width}}x{{item.depth}}</p>
         <p class="card-text mb-0"><b>Вес:</b> {{item.weight}} кг</p>
-        <p class="card-text mb-0"><b>Стоимость:</b> {{item.costDelivery===0?"договорная":item.costDelivery}} {{item.costDelivery===0?"":currencyName}}</p>
-        <p class="card-text mb-0"><b>Способ оплаты:</b> {{paymentName}}</p>
+        <p class="card-text mb-0"><b>Стоимость:</b> {{item.costDelivery===0?"договорная":item.costDelivery}} {{item.costDelivery===0?"":item.typeCurrency.name}}</p>
+        <p class="card-text mb-0"><b>Способ оплаты:</b> {{item.typePayment.name}}</p>
       </div>
       <div class=" col-md-10">
         <div class="row">
@@ -21,19 +21,22 @@
             <li class="card-text mb-0" style="width: 160px" v-for="cargoType in item.typeCargo">{{cargoType.name}}</li>
           </div>
           <div class="col-lg-5 border-right">
-            <p class="card-text mb-0"><b>От:</b> {{routeModel.fullAddressFrom}}</p>
-            <p class="card-text mb-0"><b>До:</b> {{routeModel.fullAddressTo}}</p>
+            <p class="card-text mb-0"><b>От:</b> {{item.routeMap.fullAddressFrom}}</p>
+            <p class="card-text mb-0"><b>До:</b> {{item.routeMap.fullAddressTo}}</p>
           </div>
           <div class="col-lg-2 border-right">
             <p class="card-text mb-0 font-weight-bold">Дата перевозки</p>
-            <p class="card-text mb-0"><b>С:</b> {{dateStart}}</p>
-            <p class="card-text mb-0"><b>По</b> {{dateEnd}}</p>
+            <p class="card-text mb-0"><b>С:</b> {{moment(item.routeMap.startDate).format('DD-MMMM-YY')}}</p>
+            <p class="card-text mb-0"><b>По</b> {{moment(item.routeMap.endDate).format('DD-MMMM-YY')}}</p>
           </div>
-          <div class="col-lg-3">
+          <div v-if="isHidden" class="col-lg-3">
             <p class="card-text mb-0 font-weight-bold">Контакты</p>
-            <p class="card-text mb-0"><b>Email:</b> {{userModel.email}}</p>
-            <p class="card-text mb-0"><b>Моб. номер</b> {{userModel.phoneNumber}}</p>
-            <p class="card-text mb-0"><b>Наименование</b> {{userModel.nameOrganization}}</p>
+            <p class="card-text mb-0"><b>Email:</b> {{item.appUser.email}}</p>
+            <p class="card-text mb-0"><b>Моб. номер</b> {{item.appUser.phoneNumber}}</p>
+            <p class="card-text mb-0"><b>Наименование</b> {{item.appUser.nameOrganization}}</p>
+          </div>
+          <div class=" col-md-3" v-if="!isHidden">
+            <p>Что бы увидеть контакты, необходимо зарегистрироватся или войти в систему!</p>
           </div>
         </div>
       </div>
@@ -63,6 +66,7 @@ export default {
       paymentName:"",
       dateStart:Date,
       dateEnd:Date,
+      moment: moment
     }
   },
   components:{
@@ -70,94 +74,20 @@ export default {
     TypeService, AccService,
     Model
   },
-  updated() {
-    this.GetUserData();
-    this.GetRouteMap();
-    this.GetNamePayment();
-    this.GetNameCurrency();
+  computed:{
+    isHidden (){
+      return !this.$store.getters.isVisible;
+    }
   },
   mounted() {
-    this.GetUserData();
-    this.GetNamePayment();
-    this.GetNameCurrency();
-    this.GetRouteMap();
+    moment.locale('ru')
   },
   methods:{
-    GetUserData() {
-      AccService.methods.GetUserData(this.item.idUser)
-          .then(response=>{
-            this.userModel.email = response.data.email;
-            this.userModel.phoneNumber = response.data.phoneNumber;
-            this.userModel.nameOrganization = response.data.nameOrganization;
-          })
-          .catch(error=>{
-            console.log(error);
-          })
-    },
-    GetRouteMap(){
-      RouteMapService.methods.GetRouteMap(this.item.idRouteMap)
-          .then(response=>{
-            this.routeModel.countyFrom = response.data.countyFrom;
-            this.routeModel.countyTo = response.data.countyTo;
-            this.routeModel.cityFrom = response.data.cityFrom;
-            this.routeModel.cityTo = response.data.cityTo;
-            this.routeModel.latFrom= response.data.latFrom;
-            this.routeModel.lngFrom = response.data.lngFrom;
-            this.routeModel.latTo= response.data.latTo;
-            this.routeModel.lngTo = response.data.lngTo;
-
-            this.routeModel.countryCodeFrom = response.data.countryCodeFrom;
-            this.routeModel.countryCodeTo = response.data.countryCodeTo;
-            this.routeModel.fullAddressFrom = response.data.fullAddressFrom;
-            this.routeModel.fullAddressTo = response.data.fullAddressTo;
-            this.routeModel.id = response.data.id;
-            this.routeModel.endDate = response.data.endDate;
-            this.routeModel.startDate = response.data.startDate;
-
-            moment.locale('ru');
-            this.dateStart = moment(response.data.startDate).format('DD-MMMM-YYYY')
-            this.dateEnd = moment(response.data.endDate).format('DD-MMMM-YYYY')
-
-          }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetNamePayment(){
-      TypeService.methods.getTypePaymentId(this.item.idTypePayment)
-      .then(response => {
-        this.paymentName = response.data.name;
-      }).catch((error) => {
-        console.log(error);
-      });
-    },
-    GetNameCurrency(){
-      TypeService.methods.getTypeCurrencyId(this.item.idTypeCurrency)
-          .then(response => {
-            this.currencyName = response.data.name;
-          }).catch((error) => {
-        console.log(error);
-      });
-    },
     GetTypePayments(){
       TypeService.methods.GetTypePayments();
     },
     GetTypeCurrencies(){
       TypeService.methods.GetTypeCurrencies();
-    },
-    edit_cargo:function () {
-      this.$emit('edit-cargo',
-          {
-            cargo: this.item,
-            fullAddressFrom: this.routeModel.fullAddressFrom,
-            fullAddressTo: this.routeModel.fullAddressTo,
-            idRouteMap: this.routeModel.id,
-            endDate: this.routeModel.endDate,
-            startDate: this.routeModel.startDate
-          });
-
-    },
-    delete_cargo:function () {
-      CargoService.methods.Delete(this.item.id);
     }
   }
 }

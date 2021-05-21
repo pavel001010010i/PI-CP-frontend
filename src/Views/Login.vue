@@ -63,6 +63,7 @@ name: "Login",
           localStorage.setItem('user_email',JwtTokenService.methods.getUserEmailFromJwToken(response.data));
           localStorage.setItem('user_id',JwtTokenService.methods.getUserIdFromJwToken(response.data));
           this.$store.dispatch('SetToken',response.data);
+          this.$store.dispatch('GetEmail',JwtTokenService.methods.getUserEmailFromJwToken(response.data));
           this.$store.dispatch('GetToken');
           this.$store.dispatch('IsAdmin');
           this.$store.dispatch('IsUser');
@@ -77,7 +78,8 @@ name: "Login",
       })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
-            setNotification(Constants.methods.GetNotification(`${error.response.data.message}`,"info"));
+            console.log(error);
+            setNotification(Constants.methods.GetNotification(`${error.response.data.message}`,"warning"));
           });
     }
   }
