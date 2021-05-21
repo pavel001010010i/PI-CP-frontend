@@ -110,7 +110,7 @@
               :lowerLimit = "new Date()"
           />
         </div>
-        <div class="col-lg-2 mb-3">
+        <div class="col-lg-3 mb-3">
           <label>По</label>
             <datepicker class="form-control"
                 :locale="ru"
@@ -132,10 +132,9 @@
         </div>
       </div>
     </v-popup>
+    <div v-if="cargoes.length===0">У вас нет груза.</div>
 
     <CargoList :cargoes ="cargoes" @edit-cargo="GetEditCargoItem" />
-    <p class="text-info text-success" v-show="isSucceful">{{message}}</p>
-    <p class="text-info text-danger" v-show="!isSucceful">{{ message }}</p>
   </div>
 </template>
 
@@ -215,6 +214,12 @@ name: "CustomerIndex",
     this.role =localStorage.getItem('user_role');
   },
   computed:{
+    isPopupeVisible(){
+      if(!this.$store.getters.GetSuccesAdd){
+        this.ClosePopup();
+      }
+      return this.$store.getters.GetSuccesAdd;
+    },
     cargoes(){
       return this.$store.getters.GetCargoes;
     },
@@ -255,12 +260,10 @@ name: "CustomerIndex",
 
       CargoService.methods.UpdateCargo(this.routeModel);
       this.GetCargoes();
-      this.ClosePopup();
     },
     GetEditCargoItem(data){
-
       this.isState = false;
-      this.isPopupeVisible=true;
+      this.$store.dispatch('GetSuccesAdd',true);
       this.idTypeCargoes=[];
 
       this.cargoModel ={
@@ -315,7 +318,7 @@ name: "CustomerIndex",
     },
     ShowCargoPopup(){
       this.isState = true;
-      this.isPopupeVisible=true;
+      this.$store.dispatch('GetSuccesAdd',true);
     },
     AddPopup(){
       this.selectTypeCargo=[]
@@ -338,12 +341,11 @@ name: "CustomerIndex",
 
       CargoService.methods.AddCargo(this.routeModel);
       this.GetCargoes();
-      this.ClosePopup();
     },
     ClosePopup(){
       this.cargoModel ={};
       this.routeModel ={};
-      this.isPopupeVisible=false;
+      this.$store.dispatch('GetSuccesAdd',false);
       this.idTypeCargoes = [];
       this.selectedDateStart = ""
       this.selectedDateEnd = ""

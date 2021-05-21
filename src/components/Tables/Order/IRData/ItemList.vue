@@ -60,7 +60,7 @@
           <div v-for="orderData in item.orderDats">
             <div v-for="cargo in orderData.cargoes" class="row">
               <div class="col-lg-4" > <p class="m-0 p-0">{{cargo.name}}</p></div>
-              <div class="col-lg-1">
+              <div class="col-lg-1 m-0 p-0">
                 <button class="infoButton" @click="ShowInfo(cargo)"
                         data-toggle="tooltip" data-placement="top" title="Информация о грузе">&#128712;</button>
               </div>

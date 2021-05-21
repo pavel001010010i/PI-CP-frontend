@@ -10,8 +10,7 @@
       <p><b>Расход топлива: </b>{{FuelConsumptionTotal}} л.</p>
     </div>
 
-
-    <div id="mapContainer" style="height:600px;width:100%" ref="hereMap"></div>
+    <div id="mapContainer" style="height: 440px;width:1030px;" ref="hereMap"></div>
   </div>
 </template>
 
@@ -123,7 +122,8 @@ export default {
 
 <style scoped>
 #map {
-  width: 60vw;
+  height: 500px;
+  width:1030px ;
   min-width: 360px;
   text-align: center;
   margin: 5% auto;

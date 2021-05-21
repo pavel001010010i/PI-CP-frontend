@@ -29,11 +29,15 @@ name: "MainVariables",
     },
     isAdminCheck() {
       return store.getters.getIsAdmin;
+    },
+    email(){
+      console.log(store.getters.GetEmail)
+      return store.getters.GetEmail;
     }
   },
   updated() {
     this.jwToken =localStorage.getItem('user_token');
-    this.email =localStorage.getItem('user_email');
+    //this.email =localStorage.getItem('user_email');
     this.role =localStorage.getItem('user_role');
     this.userId = localStorage.getItem('user_id')
     this.isVisibleButLogInOut =localStorage.getItem('user_token')?false:true

@@ -3,7 +3,7 @@
     <div id="app">
       <div class="container boxShadow" >
         <vue-notification-list position="bottom-right"></vue-notification-list>
-        <LogInOutShapka  :is_logout_but="!chekAutorizUser" @exit_logout="exit_logout"/>
+        <LogInOutShapka />
         <AdminPanel v-show="isAdminCheck" />
         <UserPanel v-show="isUserCheck" />
         <router-view v-show="isVisible"
@@ -11,15 +11,15 @@
       </div>
     </div>
   </div>
-
 </template>
 <script>
 import store from './store.index'
 import MaintVariables from '@/Services/MainVariables'
 import UserPanel from "@/components/NavigatonBars/UserNavigation";
-import LogInOutShapka from "@/views/LogInOutShapka";
+import LogInOutShapka from "@/Views/LogInOutShapka";
 import AdminPanel from "@/components/NavigatonBars/AdminPanel";
 import HereService from "@/Services/HereAPi/HereService";
+import Home from "@/Views/Home"
 export default {
   store:store,
   data(){
@@ -35,6 +35,7 @@ export default {
     }
   },
   components:{
+    Home,
     HereService,
     AdminPanel,
     LogInOutShapka,
@@ -52,14 +53,7 @@ export default {
       return store.getters.getIsUser && !store.getters.isVisible
     }
   },
-
   methods:{
-    exit_logout: function (val){
-      this.chekAutorizUser = val;
-    },
-    exit_logout_route: function (val){
-      this.chekAutorizUser = val;
-    },
   },
   mounted() {
     if(localStorage.getItem('user_token')===''){
@@ -68,15 +62,6 @@ export default {
       this.chekAutorizUser = false;
     }
     else {
-      if(localStorage.getItem('user_role')==="admin"){
-        this.isAdminCheck = true;
-      }
-      if(localStorage.getItem('user_role')==="customer"){
-        this.isCustomerCheck = true;
-      }
-      if(localStorage.getItem('user_role')==="provider"){
-        this.isProviderCheck = true;
-      }
       this.chekAutorizUser = true;
       this.token= localStorage.getItem('user_token');
       this.role= localStorage.getItem('user_role');
@@ -93,7 +78,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  min-height:800px;
+  min-height:850px;
   background-color: #9fcdff;
   padding: 10px;
 }

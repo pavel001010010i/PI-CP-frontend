@@ -13,7 +13,7 @@ name: "CargoService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("Ваш груз обновлен!","info"));
             store.dispatch('GetCargoes');
-            store.dispatch('GetUpdate');
+            store.dispatch('GetSuccesAdd',false);
 
           })
           .catch((error) => {
@@ -28,19 +28,54 @@ name: "CargoService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("Груз успешно добавлен!","success"));
             store.dispatch('GetCargoes');
+            store.dispatch('GetSuccesAdd',false);
 
             console.log(response.data);
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
             if(error.response.data.errors){
+
               if(error.response.data.errors.FullAddressTo){
                 setNotification(Constants.methods.GetNotification(`${error.response.data.errors.FullAddressTo}`,"alert"));
-
               }
-              if (error.response.data.errors.PostCodeTo){
-                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.PostCodeTo}`,"alert"));
-
+              if (error.response.data.errors.PostCodeFrom){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.PostCodeFrom}`,"alert"));
+              }
+              if (error.response.data.errors.endDate){
+                setNotification(Constants.methods.GetNotification(`Заполните поле даты "По"`,"alert"));
+              }
+              if (error.response.data.errors.startDate){
+                setNotification(Constants.methods.GetNotification(`Заполните поле даты "С"`,"alert"));
+              }
+              if (error.response.data.errors["Cargo.Name"]){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors["Cargo.Name"]}`,"alert"));
+              }if (error.response.data.errors["Cargo.Height"]){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors["Cargo.Height"]}`,"alert"));
+              }
+              if (error.response.data.errors["Cargo.Weight"]){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors["Cargo.Weight"]}`,"alert"));
+              }
+              if (error.response.data.errors.width){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.width}`,"alert"));
+              }
+              if (error.response.data.errors.depth){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.depth}`,"alert"));
+              }
+              if (error.response.data.errors.costDelivery){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.costDelivery}`,"alert"));
+              }
+              if (error.response.data.errors.typeCargo){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors.typeCargo}`,"alert"));
+              }
+              if (error.response.data.errors["cargo.idTypeCurrency"]){
+                setNotification(Constants.methods.GetNotification(`Выберите валюту!`,"alert"));
+              }
+              if (error.response.data.errors["cargo.idTypePayment"]){
+                setNotification(Constants.methods.GetNotification(`Выберите тип оплаты!`,"alert"));
+              }
+              if (error.response.data.errors["Cargo.Weight"]){
+                setNotification(Constants.methods.GetNotification(`${error.response.data.errors["Cargo.Weight"]}`,"alert"));
               }
             }else {
               setNotification(Constants.methods.GetNotification(`Ошибка. Груз не удалось добавить!`,"alert"));

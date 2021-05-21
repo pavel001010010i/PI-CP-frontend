@@ -126,10 +126,9 @@
         </div>
       </div>
     </v-popup>
-
+    <div v-if="transports.length===0">У вас нет транспорта.</div>
     <List :items ="transports"  @edit-item="GetEditItem" />
-    <p class="text-info text-success" v-show="isSucceful">{{message}}</p>
-    <p class="text-info text-danger" v-show="!isSucceful">{{ message }}</p>
+
   </div>
 </template>
 
@@ -216,7 +215,13 @@ name: "TransportIndex",
     },
     TypeTransportOptions(){
       return this.$store.getters.GetTypeTransports
-    }
+    },
+    isPopupeVisible(){
+      if(!this.$store.getters.GetSuccesAdd){
+        this.ClosePopup();
+      }
+      return this.$store.getters.GetSuccesAdd;
+    },
   },
   methods:{
     GetTypeTransports(){
@@ -235,12 +240,11 @@ name: "TransportIndex",
 
       TransportService.methods.Update(this.routeModel);
       this.GetTransports();
-      this.ClosePopup();
     },
     GetEditItem(data){
 
       this.isState = false;
-      this.isPopupeVisible=true;
+      this.$store.dispatch('GetSuccesAdd',true);
       this.idTypeCargoes=[];
 
       this.transportModel ={
@@ -273,7 +277,7 @@ name: "TransportIndex",
     },
     ShowCargoPopup(){
       this.isState = true;
-      this.isPopupeVisible=true;
+      this.$store.dispatch('GetSuccesAdd',true);
     },
     AddPopup(){
       this.transportModel.idUser=MainVariables.data().userId;
@@ -283,12 +287,11 @@ name: "TransportIndex",
 
       TransportService.methods.Add(this.routeModel);
       this.GetTransports();
-      this.ClosePopup();
     },
     ClosePopup(){
       this.transportModel ={};
       this.routeModel ={};
-      this.isPopupeVisible=false;
+      this.$store.dispatch('GetSuccesAdd',false);
       this.selectedDateStart = ""
       this.selectedDateEnd = ""
     },

@@ -6,7 +6,7 @@
         <div class="text-left justify-content-between d-flex" >
           <h4 >Тип груза</h4>
           <button  class="btn btn-outline-primary" @click="HiddenFormCargo">
-            <img :src="require(`@/assets/${srcButCargo}`)" />
+            <img :src="require(`@/Assets/${srcButCargo}`)" />
           </button>
         </div>
         <TypeCargoTable v-show="isHiddenFormCargo" :items="typeCargo"></TypeCargoTable>
@@ -15,7 +15,7 @@
         <div class="text-left justify-content-between d-flex" >
           <h4 >Тип транспорта</h4>
           <button  class="btn btn-outline-primary" @click="HiddenFormTrans">
-            <img :src="require(`@/assets/${srcButTrans}`)" />
+            <img :src="require(`@/Assets/${srcButTrans}`)" />
           </button>
         </div>
         <TypeTransportTable v-show="isHiddenFormTrans" :items="typeTransport"></TypeTransportTable>
@@ -24,7 +24,7 @@
         <div class="text-left justify-content-between d-flex">
           <h4 >Тип валюты</h4>
           <button  class="btn btn-outline-primary" @click="HiddenFormCurrency">
-            <img :src="require(`@/assets/${srcButCurrency}`)" />
+            <img :src="require(`@/Assets/${srcButCurrency}`)" />
           </button>
         </div>
         <TypeCurrencyTable v-show="isHiddenFormCurrency" :items="typeCurrency"></TypeCurrencyTable>
@@ -33,7 +33,7 @@
         <div class="text-left justify-content-between d-flex">
           <h4 >Тип оплаты</h4>
           <button  class="btn btn-outline-primary" @click="HiddenFormPayment">
-            <img :src="require(`@/assets/${srcButPayment}`)" />
+            <img :src="require(`@/Assets/${srcButPayment}`)" />
           </button>
         </div>
         <TypePaymentTable v-show="isHiddenFormPayment" :items="typePayment"></TypePaymentTable>

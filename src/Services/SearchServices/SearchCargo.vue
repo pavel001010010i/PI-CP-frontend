@@ -4,7 +4,7 @@
       <h2 class="text-center">Поиск груза</h2>
       <div class="">
         <button  class="btn btn-outline-primary mb-1" @click="HiddenForm">
-          <img :src="require(`@/assets/${srcBut}`)" />
+          <img :src="require(`@/Assets/${srcBut}`)" />
           Фильтр
         </button>
         <button class="btn btn-outline-info ml-1 mb-1" @click="Search">Найти</button>

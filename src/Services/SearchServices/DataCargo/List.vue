@@ -2,7 +2,7 @@
   <div class="pb-1">
     <Item v-for="item in items"
           :item="item"
-          @edit-cargo="EditCargo"/>
+          />
   </div>
 
 </template>
@@ -18,10 +18,6 @@ name: "CargoList",
   },
 
   methods:{
-
-    EditCargo(data){
-      this.$emit('edit-cargo',data);
-    }
   }
 }
 </script>

@@ -9,6 +9,7 @@ export default createStore({
             token:localStorage.getItem('user_token'),
             isAdmin:localStorage.getItem('user_role').indexOf('Admin')>-1?true:false,
             isUser:localStorage.getItem('user_role').indexOf('User')>-1?true:false,
+            email: localStorage.getItem('user_email'),
             Cargoes:[],
             Transports:[],
             RouteMap: {},
@@ -25,10 +26,17 @@ export default createStore({
             RequestProvider:[],
             RequestCustomer:[],
             OrderProvider:[],
-            OrderCustomer:[]
+            OrderCustomer:[],
+            IsSuccesAdd:false
         }
     },
     actions: {
+        GetEmail({commit},value) {
+            commit('GetEmail',value)
+        },
+        GetSuccesAdd({commit},value) {
+            commit('GetSuccesAdd',value)
+        },
         GetOProvider({commit}) {
             commit('GetOProvider')
         },
@@ -108,6 +116,12 @@ export default createStore({
     },
 
     mutations: {
+        GetEmail(state,value) {
+            state.email = value;
+        },
+        GetSuccesAdd(state,value) {
+            state.IsSuccesAdd = value;
+        },
         GetOProvider(state) {
             axios.get(Constants.data().url+"api/RequestOrder/get-orders-providers",Constants.data().configBearHeader).then(response => {
                 state.OrderProvider = response.data;
@@ -269,6 +283,12 @@ export default createStore({
 
     },
     getters: {
+        GetEmail: state=>{
+            return state.email;
+        },
+        GetSuccesAdd: state=>{
+            return state.IsSuccesAdd;
+        },
         GetOProvider: state=>{
             return state.OrderProvider;
         } ,

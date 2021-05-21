@@ -2,6 +2,9 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light ">
     <div class="container-fluid">
       <label></label>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <div class="navbar-nav mr-auto mt-2 mt-lg-0 ">
         </div>
@@ -22,8 +25,8 @@
 </template>
 
 <script>
-import Logout from "@/views/Logout";
-import Login from "@/views/Login";
+import Logout from "@/Views/Logout";
+import Login from "@/Views/Login";
 import MainVariables from "@/Services/MainVariables";
 export default {
 name: "LogInOutShapka",
@@ -35,12 +38,14 @@ name: "LogInOutShapka",
   computed: {
   isVisibleBut(){
         return MainVariables.data().isVisibleButLogInOut
+    },
+    username(){
+    return this.$store.getters.GetEmail
     }
   },
   updated() {
   this.isVisibleBut = MainVariables.data().isVisibleButLogInOut;
   this.username= MainVariables.data().email
-
   },
   components:{
     Login,

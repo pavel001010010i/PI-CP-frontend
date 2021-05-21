@@ -95,11 +95,11 @@
               <p>{{item.name}}</p>
             </div>
             <div class="col-lg-6">
-              <div class="row">
+              <div class="d-flex justify-content-between">
                 <div >
                   <p class="m-0 p-0">{{item.transport.name}} {{item.transport.model}}</p>
                 </div>
-                <div class="col-lg-1">
+                <div class="col-lg-2">
                   <button class="infoButton" @click="ShowInfoUser"
                           data-toggle="tooltip" data-placement="top" title="Информация владельце транспорта">&#128712;</button>
                 </div>
@@ -115,7 +115,7 @@
           <div v-for="orderData in item.orderDats">
             <div v-for="cargo in orderData.cargoes" class="row">
               <div class="col-lg-4" > <p class="m-0 p-0">{{cargo.name}}</p></div>
-              <div class="col-lg-1">
+              <div class="col-lg-1 m-0 p-0">
                 <button class="infoButton" @click="ShowInfo(cargo)"
                         data-toggle="tooltip" data-placement="top" title="Информация о грузе">&#128712;</button>
               </div>

@@ -27,7 +27,7 @@ export default {
           "manually": true,
           "automatically": true
         },
-        "duration": 3000,
+        "duration": 10000,
         "showDurationProgress": true,
         "appearance": "light" //"light"|"dark"|"glass"
       }

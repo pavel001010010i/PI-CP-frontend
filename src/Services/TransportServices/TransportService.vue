@@ -13,7 +13,7 @@ name: "TransportService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("Ваш транспорт успешно обновлен!","info"));
             store.dispatch('GetTransports');
-
+            store.dispatch('GetSuccesAdd',false);
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
@@ -27,8 +27,7 @@ name: "TransportService",
             const { setNotification } = useNotificationStore()
             setNotification(Constants.methods.GetNotification("Транспорт успешно добавлен!","success"));
             store.dispatch('GetTransports');
-
-            console.log(response.data);
+            store.dispatch('GetSuccesAdd',false);
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
@@ -54,9 +53,15 @@ name: "TransportService",
       const { setNotification } = useNotificationStore()
       axios.delete(Constants.data().url+ `api/transport/delete-transport/${data}`,Constants.data().configBearHeader)
           .then(response => {
-            setNotification(Constants.methods.GetNotification("Транспорт удален","success"));
+            console.log(response)
+            if(response.data.status){
+              setNotification(Constants.methods.GetNotification(`${response.data.message}`,"info"));
+            }
+            else {
+              setNotification(Constants.methods.GetNotification(`${response.data.message}`,"alert"));
+            }
+
             store.dispatch('GetTransports');
-            console.log(response.status)
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
