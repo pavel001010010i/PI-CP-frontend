@@ -14,6 +14,9 @@ name: "AccountService",
   Login: function (userData){
     axios.post(Constants.data().url+'api/account/login',userData,Constants.data().contTypeHeader)
   },
+    ConfirmEmail(data){
+      return axios.post(Constants.data().url+'api/account/confirm-email',{ code: data},Constants.data().contTypeHeader)
+    },
     RegisterUser(data){
       return axios.post(Constants.data().url+'api/account/registration-user',data,Constants.data().contTypeHeader)
     },

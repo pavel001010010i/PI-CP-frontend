@@ -71,11 +71,6 @@ const routes = [
     component: () => import( '../Services/HereAPi/HereService')
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import(  '../Views/About.vue')
-  },
-  {
     path: '/login',
     name: 'Login',
     component: () => import(  '../Views/Login.vue')

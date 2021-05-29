@@ -26,7 +26,6 @@ import AuthService from "@/Services/AuthService/auth.service"
 import { useNotificationStore } from '@dafcoe/vue-notification'
 import Constants from "@/Services/Constants";
 
-
 export default {
 name: "Login",
   components: {
@@ -52,7 +51,14 @@ name: "Login",
   },
 
   methods:{
-
+    submitForm() {
+      this.v$.$validate() // checks all inputs
+      if (!this.v$.$error) { // if ANY fail validation
+        alert('Form successfully submitted.')
+      } else {
+        alert('Form failed validation')
+      }
+    },
     LoginSubmit: function (){
       AuthService.methods.Login({
         login: this.loginField,
@@ -87,12 +93,5 @@ name: "Login",
 </script>
 
 <style scoped>
-.active{
-  color: red;
-  font-size: 200%;
-}
-.green{
-  color: forestgreen;
-  font-size: 200%;
-}
+
 </style>
