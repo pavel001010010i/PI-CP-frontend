@@ -114,7 +114,6 @@ export default createStore({
         }
 
     },
-
     mutations: {
         GetEmail(state,value) {
             state.email = value;

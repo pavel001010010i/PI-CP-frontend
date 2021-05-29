@@ -19,7 +19,6 @@
 
 <script>
 import Logout from "@/Views/Logout";
-import About from "@/Views/About";
 export default {
 name: "Shapka",
   data(){
@@ -36,7 +35,6 @@ name: "Shapka",
     }
   },
   components:{
-    About,
   Logout
   }
 }

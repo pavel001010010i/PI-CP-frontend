@@ -40,7 +40,7 @@
     <div class="col-md-5 text-left ">
       <div class="row mb-4 ">
         <div class="col-4">
-          <label>Емайл</label>
+          <label>Эл. почта</label>
         </div>
         <div class="col">
           <div class="input-group">
@@ -77,7 +77,16 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-outline-primary mb-3"  v-on:click="RegistrationUser">Регистрация</button>
+  <div v-if="isVisible" class="form-group row">
+    <label for="inputEmail4" class="col-lg-1 col-form-label">Код</label>
+    <div class="col-lg-auto input mb-2">
+      <input type="text" class="form-control" id="inputEmail4"  v-model="confirmEmail">
+    </div>
+    <div class="col-lg-auto">
+      <button class="btn btn-primary mb-2" @click="SendConfirmEmail">Подтвердить почту</button>
+    </div>
+  </div>
+  <button class="btn btn-outline-primary mb-3"  @click="RegistrationUser">Регистрация</button>
 
 </template>
 
@@ -93,18 +102,35 @@ name: "RegistrationProvider",
   },
   data() {
     return {
-      model:Model.data().registerModel
+      model:Model.data().registerModel,
+      confirmEmail:"",
+      isVisible:false
     }
   },
   methods:{
+    SendConfirmEmail(){
+      console.log(this.confirmEmail)
+      AccountService.methods.ConfirmEmail(this.confirmEmail).then(response=>{
+        console.log(response);
+        const { setNotification } = useNotificationStore()
+        setNotification(Constants.methods.GetNotification(response.data.message,"success"));
 
+        setTimeout(()=>this.$router.push({ name: 'Login' }), 3000);
+
+      }).catch(error=>{
+        const { setNotification } = useNotificationStore()
+        setNotification(Constants.methods.GetNotification(error.response.data.message,"alert"));
+        console.log(error);
+      });
+    },
     RegistrationUser(){
 
       AccountService.methods.RegisterUser(this.model).then(response=>{
         console.log(response);
         const { setNotification } = useNotificationStore()
-        setNotification(Constants.methods.GetNotification("Ваша учетная запись успешно создана!","success"));
-        setTimeout(()=>this.$router.push({ name: 'Login' }), 3000);
+        setNotification(Constants.methods.GetNotification(response.data.message,"info"));
+        this.isVisible = true;
+
 
       }).catch(error=>{
         if(error.response.data.Email){
@@ -134,7 +160,7 @@ name: "RegistrationProvider",
 
         console.log(error);
       })
-    },
+    }
   }
 }
 </script>

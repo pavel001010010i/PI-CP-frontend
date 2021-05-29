@@ -14,7 +14,6 @@ name: "CargoService",
             setNotification(Constants.methods.GetNotification("Ваш груз обновлен!","info"));
             store.dispatch('GetCargoes');
             store.dispatch('GetSuccesAdd',false);
-
           })
           .catch((error) => {
             const { setNotification } = useNotificationStore()
